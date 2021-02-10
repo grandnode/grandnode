@@ -19,20 +19,20 @@ namespace Grand.Web.Features.Handlers.Catalog
     public class GetHomepageCategoryHandler : IRequestHandler<GetHomepageCategory, IList<CategoryModel>>
     {
         private readonly ICategoryService _categoryService;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
         private readonly MediaSettings _mediaSettings;
 
         public GetHomepageCategoryHandler(
             ICategoryService categoryService,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IPictureService pictureService,
             ILocalizationService localizationService,
             MediaSettings mediaSettings)
         {
             _categoryService = categoryService;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _pictureService = pictureService;
             _localizationService = localizationService;
             _mediaSettings = mediaSettings;
@@ -45,7 +45,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                             request.Store.Id,
                             request.Language.Id);
 
-            var model = await _cacheManager.GetAsync(categoriesCacheKey, async () =>
+            var model = await _cacheBase.GetAsync(categoriesCacheKey, async () =>
             {
                 var cat = new List<CategoryModel>();
                 foreach (var x in (await _categoryService.GetAllCategoriesDisplayedOnHomePage()))

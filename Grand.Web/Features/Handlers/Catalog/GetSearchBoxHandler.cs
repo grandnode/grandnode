@@ -17,18 +17,18 @@ namespace Grand.Web.Features.Handlers.Catalog
 {
     public class GetSearchBoxHandler : IRequestHandler<GetSearchBox, SearchBoxModel>
     {
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly ICategoryService _categoryService;
         private readonly ILocalizationService _localizationService;
         private readonly CatalogSettings _catalogSettings;
 
         public GetSearchBoxHandler(
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             ICategoryService categoryService,
             ILocalizationService localizationService,
             CatalogSettings catalogSettings)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _categoryService = categoryService;
             _localizationService = localizationService;
             _catalogSettings = catalogSettings;
@@ -40,7 +40,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                 string.Join(",", request.Customer.GetCustomerRoleIds()),
                 request.Store.Id);
 
-            return await _cacheManager.GetAsync(cacheKey, async () =>
+            return await _cacheBase.GetAsync(cacheKey, async () =>
             {
                 var searchbocategories = await _categoryService.GetAllCategoriesSearchBox();
 

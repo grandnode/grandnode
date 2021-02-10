@@ -25,7 +25,7 @@ namespace Grand.Services.Orders
 
         private readonly IRepository<CheckoutAttribute> _checkoutAttributeRepository;
         private readonly IMediator _mediator;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IWorkContext _workContext;
         private readonly CatalogSettings _catalogSettings;
 
@@ -39,13 +39,13 @@ namespace Grand.Services.Orders
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="checkoutAttributeRepository">Checkout attribute repository</param>
         /// <param name="mediator">Mediator</param>
-        public CheckoutAttributeService(ICacheManager cacheManager,
+        public CheckoutAttributeService(ICacheBase cacheManager,
             IRepository<CheckoutAttribute> checkoutAttributeRepository,
             IMediator mediator,
             IWorkContext workContext,
             CatalogSettings catalogSettings)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _checkoutAttributeRepository = checkoutAttributeRepository;
             _mediator = mediator;
             _workContext = workContext;
@@ -67,8 +67,8 @@ namespace Grand.Services.Orders
 
             await _checkoutAttributeRepository.DeleteAsync(checkoutAttribute);
 
-            await _cacheManager.RemoveByPrefix(CacheKey.CHECKOUTATTRIBUTES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CacheKey.CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.CHECKOUTATTRIBUTES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(checkoutAttribute);
@@ -83,7 +83,7 @@ namespace Grand.Services.Orders
         public virtual async Task<IList<CheckoutAttribute>> GetAllCheckoutAttributes(string storeId = "", bool excludeShippableAttributes = false, bool ignorAcl = false)
         {
             string key = string.Format(CacheKey.CHECKOUTATTRIBUTES_ALL_KEY, storeId, excludeShippableAttributes, ignorAcl);
-            return await _cacheManager.GetAsync(key, () =>
+            return await _cacheBase.GetAsync(key, () =>
             {
                 var query = _checkoutAttributeRepository.Table;
                 query = query.OrderBy(c => c.DisplayOrder);
@@ -123,7 +123,7 @@ namespace Grand.Services.Orders
         public virtual Task<CheckoutAttribute> GetCheckoutAttributeById(string checkoutAttributeId)
         {
             string key = string.Format(CacheKey.CHECKOUTATTRIBUTES_BY_ID_KEY, checkoutAttributeId);
-            return _cacheManager.GetAsync(key, () => _checkoutAttributeRepository.GetByIdAsync(checkoutAttributeId));
+            return _cacheBase.GetAsync(key, () => _checkoutAttributeRepository.GetByIdAsync(checkoutAttributeId));
         }
 
         /// <summary>
@@ -137,8 +137,8 @@ namespace Grand.Services.Orders
 
             await _checkoutAttributeRepository.InsertAsync(checkoutAttribute);
 
-            await _cacheManager.RemoveByPrefix(CacheKey.CHECKOUTATTRIBUTES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CacheKey.CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.CHECKOUTATTRIBUTES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(checkoutAttribute);
@@ -155,8 +155,8 @@ namespace Grand.Services.Orders
 
             await _checkoutAttributeRepository.UpdateAsync(checkoutAttribute);
 
-            await _cacheManager.RemoveByPrefix(CacheKey.CHECKOUTATTRIBUTES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CacheKey.CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.CHECKOUTATTRIBUTES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.CHECKOUTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(checkoutAttribute);

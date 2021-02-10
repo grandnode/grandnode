@@ -21,7 +21,7 @@ namespace Grand.Services.Orders
 
         private readonly IRepository<OrderTag> _orderTagRepository;
         private readonly IRepository<Order> _orderRepository;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IMediator _mediator;
 
         #endregion
@@ -30,14 +30,14 @@ namespace Grand.Services.Orders
 
         public OrderTagService(IRepository<OrderTag> orderTagRepository,
             IRepository<Order> orderRepository,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IMediator mediator
             )
         {
             _orderTagRepository = orderTagRepository;
             _orderRepository = orderRepository;
             _mediator = mediator;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
         }
 
         #endregion
@@ -52,7 +52,7 @@ namespace Grand.Services.Orders
         private async Task<Dictionary<string, int>> GetOrderCount(string orderTagId)
         {
             string key = string.Format(CacheKey.ORDERTAG_COUNT_KEY, orderTagId);
-            return await _cacheManager.GetAsync(key, async () => 
+            return await _cacheBase.GetAsync(key, async () => 
             {
                 var query = from ot in _orderTagRepository.Table
                             select ot;
@@ -86,8 +86,8 @@ namespace Grand.Services.Orders
             await _orderTagRepository.DeleteAsync(orderTag);
 
             //cache
-            await _cacheManager.RemoveByPrefix(CacheKey.ORDERTAG_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CacheKey.ORDERS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.ORDERTAG_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.ORDERS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(orderTag);
@@ -139,7 +139,7 @@ namespace Grand.Services.Orders
             await _orderTagRepository.InsertAsync(orderTag);
 
             //cache
-            await _cacheManager.RemoveByPrefix(CacheKey.ORDERTAG_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.ORDERTAG_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(orderTag);
@@ -157,7 +157,7 @@ namespace Grand.Services.Orders
             await _orderTagRepository.UpdateAsync(orderTag);
 
             //cache
-            await _cacheManager.RemoveByPrefix(CacheKey.ORDERTAG_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.ORDERTAG_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(orderTag);
@@ -181,8 +181,8 @@ namespace Grand.Services.Orders
             var orderTag =   await _orderTagRepository.GetByIdAsync(orderTagId);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.ORDERS_BY_ID_KEY, orderId));
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.ORDERTAG_COUNT_KEY, orderTagId));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.ORDERS_BY_ID_KEY, orderId));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.ORDERTAG_COUNT_KEY, orderTagId));
 
             //event notification
             await _mediator.EntityUpdated(orderTag);
@@ -203,8 +203,8 @@ namespace Grand.Services.Orders
             await _orderTagRepository.Collection.UpdateManyAsync(new BsonDocument("_id", orderTagId), updateTag);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.ORDERS_BY_ID_KEY, orderId));
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.ORDERTAG_COUNT_KEY, orderTagId));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.ORDERS_BY_ID_KEY, orderId));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.ORDERTAG_COUNT_KEY, orderTagId));
         }
 
         /// <summary>

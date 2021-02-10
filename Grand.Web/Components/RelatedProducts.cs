@@ -15,7 +15,7 @@ namespace Grand.Web.Components
     public class RelatedProductsViewComponent : BaseViewComponent
     {
         #region Fields
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IProductService _productService;
         private readonly IStoreContext _storeContext;
         private readonly IMediator _mediator;
@@ -26,13 +26,13 @@ namespace Grand.Web.Components
         #region Constructors
 
         public RelatedProductsViewComponent(
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IProductService productService,
             IStoreContext storeContext,
             IMediator mediator,
             CatalogSettings catalogSettings)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _productService = productService;
             _storeContext = storeContext;
             _mediator = mediator;
@@ -45,7 +45,7 @@ namespace Grand.Web.Components
 
         public async Task<IViewComponentResult> InvokeAsync(string productId, int? productThumbPictureSize)
         {
-            var productIds = await _cacheManager.GetAsync(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
+            var productIds = await _cacheBase.GetAsync(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
                   async () => (await _productService.GetProductById(productId)).RelatedProducts.OrderBy(x => x.DisplayOrder).Select(x => x.ProductId2).ToArray());
 
             //load products

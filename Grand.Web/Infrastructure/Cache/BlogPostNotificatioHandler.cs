@@ -13,24 +13,24 @@ namespace Grand.Web.Infrastructure.Cache
         INotificationHandler<EntityDeleted<BlogPost>>
     {
 
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
-        public BlogPostNotificatioHandler(ICacheManager cacheManager)
+        public BlogPostNotificatioHandler(ICacheBase cacheManager)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
         }
 
         public async Task Handle(EntityInserted<BlogPost> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.BLOG_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(ModelCacheEventConst.BLOG_PATTERN_KEY);
         }
         public async Task Handle(EntityUpdated<BlogPost> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.BLOG_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(ModelCacheEventConst.BLOG_PATTERN_KEY);
         }
         public async Task Handle(EntityDeleted<BlogPost> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.BLOG_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(ModelCacheEventConst.BLOG_PATTERN_KEY);
         }
     }
 }

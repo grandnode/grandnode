@@ -18,15 +18,15 @@ namespace Grand.Web.Features.Handlers.Catalog
 {
     public class GetManufacturerNavigationHandler : IRequestHandler<GetManufacturerNavigation, ManufacturerNavigationModel>
     {
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IManufacturerService _manufacturerService;
         private readonly CatalogSettings _catalogSettings;
 
-        public GetManufacturerNavigationHandler(ICacheManager cacheManager, 
+        public GetManufacturerNavigationHandler(ICacheBase cacheManager, 
             IManufacturerService manufacturerService, 
             CatalogSettings catalogSettings)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _manufacturerService = manufacturerService;
             _catalogSettings = catalogSettings;
         }
@@ -36,7 +36,7 @@ namespace Grand.Web.Features.Handlers.Catalog
             string cacheKey = string.Format(ModelCacheEventConst.MANUFACTURER_NAVIGATION_MODEL_KEY,
                 request.CurrentManufacturerId, request.Language.Id, string.Join(",", request.Customer.GetCustomerRoleIds()),
                 request.Store.Id);
-            var cacheModel = await _cacheManager.GetAsync(cacheKey, async () =>
+            var cacheModel = await _cacheBase.GetAsync(cacheKey, async () =>
             {
                 var currentManufacturer = await _manufacturerService.GetManufacturerById(request.CurrentManufacturerId);
                 var manufacturers = await _manufacturerService.GetAllManufacturers(pageSize: _catalogSettings.ManufacturersBlockItemsToDisplay, storeId: request.Store.Id);

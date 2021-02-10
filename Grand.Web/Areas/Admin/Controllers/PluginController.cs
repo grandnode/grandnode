@@ -53,7 +53,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IStoreService _storeService;
         private readonly IThemeProvider _themeProvider;
         private readonly IMediator _mediator;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly ILogger _logger;
         private readonly PaymentSettings _paymentSettings;
         private readonly ShippingSettings _shippingSettings;
@@ -73,7 +73,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             IStoreService storeService,
             IThemeProvider themeProvider,
             IMediator mediator,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             ILogger logger,
             PaymentSettings paymentSettings,
             ShippingSettings shippingSettings,
@@ -90,7 +90,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _storeService = storeService;
             _themeProvider = themeProvider;
             _mediator = mediator;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _logger = logger;
             _paymentSettings = paymentSettings;
             _shippingSettings = shippingSettings;
@@ -766,7 +766,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                         }
                     }
                 }
-                await _cacheManager.Clear();
+                await _cacheBase.Clear();
                 ViewBag.RefreshPage = true;
                 ViewBag.btnId = btnId;
                 ViewBag.formId = formId;

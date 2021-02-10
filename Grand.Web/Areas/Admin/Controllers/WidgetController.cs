@@ -24,7 +24,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IWidgetService _widgetService;
         private readonly ISettingService _settingService;
 	    private readonly IPluginFinder _pluginFinder;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly WidgetSettings _widgetSettings;
         #endregion
 
@@ -33,13 +33,13 @@ namespace Grand.Web.Areas.Admin.Controllers
         public WidgetController(IWidgetService widgetService,
             ISettingService settingService,
             IPluginFinder pluginFinder,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             WidgetSettings widgetSettings)
 		{
             _widgetService = widgetService;
             _widgetSettings = widgetSettings;
             _pluginFinder = pluginFinder;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _settingService = settingService;
         }
 
@@ -97,7 +97,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                     await _settingService.SaveSetting(_widgetSettings);
                 }
             }
-            await _cacheManager.Clear();
+            await _cacheBase.Clear();
             var pluginDescriptor = widget.PluginDescriptor;
             //display order
             pluginDescriptor.DisplayOrder = model.DisplayOrder;

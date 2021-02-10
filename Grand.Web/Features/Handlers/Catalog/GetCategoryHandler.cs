@@ -31,7 +31,7 @@ namespace Grand.Web.Features.Handlers.Catalog
         private readonly IWebHelper _webHelper;
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICurrencyService _currencyService;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly ICategoryService _categoryService;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
@@ -45,7 +45,7 @@ namespace Grand.Web.Features.Handlers.Catalog
             IWebHelper webHelper,
             IPriceFormatter priceFormatter,
             ICurrencyService currencyService,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             ICategoryService categoryService,
             IPictureService pictureService,
             ILocalizationService localizationService,
@@ -58,7 +58,7 @@ namespace Grand.Web.Features.Handlers.Catalog
             _webHelper = webHelper;
             _priceFormatter = priceFormatter;
             _currencyService = currencyService;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _categoryService = categoryService;
             _pictureService = pictureService;
             _localizationService = localizationService;
@@ -115,7 +115,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                     string.Join(",", customer.GetCustomerRoleIds()),
                     storeId,
                     languageId);
-                model.CategoryBreadcrumb = await _cacheManager.GetAsync(breadcrumbCacheKey, async () =>
+                model.CategoryBreadcrumb = await _cacheBase.GetAsync(breadcrumbCacheKey, async () =>
                     (await _categoryService.GetCategoryBreadCrumb(request.Category))
                     .Select(catBr => new CategoryModel {
                         Id = catBr.Id,
@@ -159,7 +159,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                 string cacheKey = string.Format(ModelCacheEventConst.CATEGORY_HAS_FEATURED_PRODUCTS_KEY, request.Category.Id,
                     string.Join(",", customer.GetCustomerRoleIds()), storeId);
 
-                var hasFeaturedProductsCache = await _cacheManager.GetAsync<bool?>(cacheKey, async () =>
+                var hasFeaturedProductsCache = await _cacheBase.GetAsync<bool?>(cacheKey, async () =>
                 {
                     featuredProducts = (await _mediator.Send(new GetSearchProductsQuery() {
                         PageSize = _catalogSettings.LimitOfFeaturedProducts,
@@ -228,7 +228,7 @@ namespace Grand.Web.Features.Handlers.Catalog
             //specs
             await model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
                 products.filterableSpecificationAttributeOptionIds,
-                _specificationAttributeService, _webHelper, _cacheManager, request.Language.Id);
+                _specificationAttributeService, _webHelper, _cacheBase, request.Language.Id);
 
             return model;
         }

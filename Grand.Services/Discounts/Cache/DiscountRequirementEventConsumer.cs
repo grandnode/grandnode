@@ -25,21 +25,21 @@ namespace Grand.Services.Discounts.Cache
         public const string DISCOUNT_REQUIREMENT_MODEL_KEY = "Grand.discountrequirements.all-{0}";
         public const string DISCOUNT_REQUIREMENT_PATTERN_KEY = "Grand.discountrequirements";
 
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
-        public DiscountRequirementEventConsumer(ICacheManager cacheManager)
+        public DiscountRequirementEventConsumer(ICacheBase cacheManager)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
         }
 
         public async Task Handle(EntityUpdated<Discount> notification, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(DISCOUNT_REQUIREMENT_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(DISCOUNT_REQUIREMENT_PATTERN_KEY);
         }
 
         public async Task Handle(EntityDeleted<Discount> notification, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(DISCOUNT_REQUIREMENT_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(DISCOUNT_REQUIREMENT_PATTERN_KEY);
         }
 
     }

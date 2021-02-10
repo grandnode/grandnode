@@ -25,19 +25,19 @@ namespace Grand.Services.Catalog
         private readonly IRepository<Bid> _bidRepository;
         private readonly IProductService _productService;
         private readonly IRepository<Product> _productRepository;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IMediator _mediator;
 
         public AuctionService(IRepository<Bid> bidRepository,
             IProductService productService,
             IRepository<Product> productRepository,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IMediator mediator)
         {
             _bidRepository = bidRepository;
             _productService = productService;
             _productRepository = productRepository;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _mediator = mediator;
         }
 
@@ -109,7 +109,7 @@ namespace Grand.Services.Catalog
 
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
 
             await _mediator.EntityUpdated(product);
         }
@@ -133,7 +133,7 @@ namespace Grand.Services.Catalog
 
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
 
             await _mediator.EntityUpdated(product);
         }

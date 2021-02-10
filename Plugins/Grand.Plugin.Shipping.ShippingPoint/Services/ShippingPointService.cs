@@ -20,7 +20,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Services
 
         #region Fields
 
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IRepository<ShippingPoints> _shippingPointRepository;
 
         #endregion
@@ -32,10 +32,10 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Services
         /// </summary>
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="ShippingPointRepository">Store pickup point repository</param>
-        public ShippingPointService(ICacheManager cacheManager,
+        public ShippingPointService(ICacheBase cacheManager,
             IRepository<ShippingPoints> ShippingPointRepository)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _shippingPointRepository = ShippingPointRepository;
         }
 
@@ -94,7 +94,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Services
                 throw new ArgumentNullException("pickupPoint");
 
             await _shippingPointRepository.InsertAsync(pickupPoint);
-            await _cacheManager.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Services
                 throw new ArgumentNullException("pickupPoint");
 
             await _shippingPointRepository.UpdateAsync(pickupPoint);
-            await _cacheManager.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace Grand.Plugin.Shipping.ShippingPoint.Services
                 throw new ArgumentNullException("pickupPoint");
 
             await _shippingPointRepository.DeleteAsync(pickupPoint);
-            await _cacheManager.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(PICKUP_POINT_PATTERN_KEY);
         }
         #endregion
     }

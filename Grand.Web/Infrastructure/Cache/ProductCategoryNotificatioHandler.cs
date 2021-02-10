@@ -13,27 +13,27 @@ namespace Grand.Web.Infrastructure.Cache
         INotificationHandler<EntityDeleted<ProductCategory>>
     {
 
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
-        public ProductCategoryNotificatioHandler(ICacheManager cacheManager)
+        public ProductCategoryNotificatioHandler(ICacheBase cacheManager)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
         }
 
         public async Task Handle(EntityInserted<ProductCategory> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCT_BREADCRUMB_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.CATEGORY_HAS_FEATURED_PRODUCTS_MODEL_KEY, eventMessage.Entity.CategoryId));
+            await _cacheBase.RemoveByPrefix(ModelCacheEventConst.PRODUCT_BREADCRUMB_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(string.Format(ModelCacheEventConst.CATEGORY_HAS_FEATURED_PRODUCTS_MODEL_KEY, eventMessage.Entity.CategoryId));
         }
         public async Task Handle(EntityUpdated<ProductCategory> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCT_BREADCRUMB_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.CATEGORY_HAS_FEATURED_PRODUCTS_MODEL_KEY, eventMessage.Entity.CategoryId));
+            await _cacheBase.RemoveByPrefix(ModelCacheEventConst.PRODUCT_BREADCRUMB_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(string.Format(ModelCacheEventConst.CATEGORY_HAS_FEATURED_PRODUCTS_MODEL_KEY, eventMessage.Entity.CategoryId));
         }
         public async Task Handle(EntityDeleted<ProductCategory> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.PRODUCT_BREADCRUMB_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.CATEGORY_HAS_FEATURED_PRODUCTS_MODEL_KEY, eventMessage.Entity.CategoryId));
+            await _cacheBase.RemoveByPrefix(ModelCacheEventConst.PRODUCT_BREADCRUMB_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(string.Format(ModelCacheEventConst.CATEGORY_HAS_FEATURED_PRODUCTS_MODEL_KEY, eventMessage.Entity.CategoryId));
         }
     }
 }

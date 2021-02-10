@@ -23,7 +23,7 @@ namespace Grand.Services.Events
         private readonly IRepository<Manufacturer> _manufacturerRepository;
         private readonly IRepository<Vendor> _vendorRepository;
         private readonly IRepository<DiscountCoupon> _discountCouponRepository;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
         #endregion
 
@@ -33,7 +33,7 @@ namespace Grand.Services.Events
             IRepository<Manufacturer> manufacturerRepository,
             IRepository<Vendor> vendorRepository,
             IRepository<DiscountCoupon> discountCouponRepository,
-            ICacheManager cacheManager
+            ICacheBase cacheManager
         )
         {
             _productRepository = productRepository;
@@ -42,7 +42,7 @@ namespace Grand.Services.Events
             _vendorRepository = vendorRepository;
             _vendorRepository = vendorRepository;
             _discountCouponRepository = discountCouponRepository;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
         }
 
         public async Task Handle(EntityDeleted<Discount> notification, CancellationToken cancellationToken)
@@ -55,7 +55,7 @@ namespace Grand.Services.Events
                 var builderproduct = Builders<Product>.Update;
                 var updatefilter = builderproduct.Pull(x => x.AppliedDiscounts, discount.Id);
                 await _productRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
-                await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_PATTERN_KEY);
+                await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTS_PATTERN_KEY);
             }
 
             if (discount.DiscountType == DiscountType.AssignedToCategories)
@@ -63,7 +63,7 @@ namespace Grand.Services.Events
                 var buildercategory = Builders<Category>.Update;
                 var updatefilter = buildercategory.Pull(x => x.AppliedDiscounts, discount.Id);
                 await _categoryRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
-                await _cacheManager.RemoveByPrefix(CacheKey.CATEGORIES_PATTERN_KEY);
+                await _cacheBase.RemoveByPrefix(CacheKey.CATEGORIES_PATTERN_KEY);
             }
 
             if (discount.DiscountType == DiscountType.AssignedToManufacturers)
@@ -71,14 +71,14 @@ namespace Grand.Services.Events
                 var buildermanufacturer = Builders<Manufacturer>.Update;
                 var updatefilter = buildermanufacturer.Pull(x => x.AppliedDiscounts, discount.Id);
                 await _manufacturerRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
-                await _cacheManager.RemoveByPrefix(CacheKey.MANUFACTURERS_PATTERN_KEY);
+                await _cacheBase.RemoveByPrefix(CacheKey.MANUFACTURERS_PATTERN_KEY);
             }
             if (discount.DiscountType == DiscountType.AssignedToVendors)
             {
                 var buildervendor = Builders<Vendor>.Update;
                 var updatefilter = buildervendor.Pull(x => x.AppliedDiscounts, discount.Id);
                 await _vendorRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
-                await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_PATTERN_KEY);
+                await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTS_PATTERN_KEY);
             }
 
             //remove coupon codes

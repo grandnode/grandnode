@@ -51,7 +51,7 @@ namespace Grand.Web.Features.Handlers.Products
         private readonly ICurrencyService _currencyService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IMeasureService _measureService;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IPictureService _pictureService;
         private readonly IProductAttributeParser _productAttributeParser;
         private readonly IWarehouseService _warehouseService;
@@ -85,7 +85,7 @@ namespace Grand.Web.Features.Handlers.Products
             ICurrencyService currencyService,
             IPriceFormatter priceFormatter,
             IMeasureService measureService,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IPictureService pictureService,
             IProductAttributeParser productAttributeParser,
             IWarehouseService warehouseService,
@@ -117,7 +117,7 @@ namespace Grand.Web.Features.Handlers.Products
             _currencyService = currencyService;
             _priceFormatter = priceFormatter;
             _measureService = measureService;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _pictureService = pictureService;
             _productAttributeParser = productAttributeParser;
             _warehouseService = warehouseService;
@@ -285,7 +285,7 @@ namespace Grand.Web.Features.Handlers.Products
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            model.ProductManufacturers = await _cacheManager.GetAsync(manufacturersCacheKey, async () =>
+            model.ProductManufacturers = await _cacheBase.GetAsync(manufacturersCacheKey, async () =>
             {
                 var listManuf = new List<ManufacturerModel>();
                 foreach (var item in product.ProductManufacturers)
@@ -482,7 +482,7 @@ namespace Grand.Web.Features.Handlers.Products
                 _workContext.WorkingLanguage.Id,
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id);
-            return await _cacheManager.GetAsync(breadcrumbCacheKey, async () =>
+            return await _cacheBase.GetAsync(breadcrumbCacheKey, async () =>
             {
                 var breadcrumbModel = new ProductDetailsModel.ProductBreadcrumbModel {
 
@@ -515,7 +515,7 @@ namespace Grand.Web.Features.Handlers.Products
         private async Task<IList<ProductTagModel>> PrepareProductTagModel(Product product)
         {
             var productTagsCacheKey = string.Format(ModelCacheEventConst.PRODUCTTAG_BY_PRODUCT_MODEL_KEY, product.Id, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            return await _cacheManager.GetAsync(productTagsCacheKey, async () =>
+            return await _cacheBase.GetAsync(productTagsCacheKey, async () =>
             {
                 var tags = new List<ProductTagModel>();
                 foreach (var item in product.ProductTags)

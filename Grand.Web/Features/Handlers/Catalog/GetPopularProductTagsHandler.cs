@@ -14,16 +14,16 @@ namespace Grand.Web.Features.Handlers.Catalog
 {
     public class GetPopularProductTagsHandler : IRequestHandler<GetPopularProductTags, PopularProductTagsModel>
     {
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IProductTagService _productTagService;
         private readonly CatalogSettings _catalogSettings;
 
         public GetPopularProductTagsHandler(
-            ICacheManager cacheManager, 
+            ICacheBase cacheManager, 
             IProductTagService productTagService, 
             CatalogSettings catalogSettings)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _productTagService = productTagService;
             _catalogSettings = catalogSettings;
         }
@@ -31,7 +31,7 @@ namespace Grand.Web.Features.Handlers.Catalog
         public async Task<PopularProductTagsModel> Handle(GetPopularProductTags request, CancellationToken cancellationToken)
         {
             var cacheKey = string.Format(ModelCacheEventConst.PRODUCTTAG_POPULAR_MODEL_KEY, request.Language.Id, request.Store.Id);
-            var cacheModel = await _cacheManager.GetAsync(cacheKey, async () =>
+            var cacheModel = await _cacheBase.GetAsync(cacheKey, async () =>
             {
                 var model = new PopularProductTagsModel();
 

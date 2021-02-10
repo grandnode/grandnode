@@ -12,12 +12,12 @@ namespace Grand.Web.Features.Handlers.Common
     public class GetSitemapXMLHandler : IRequestHandler<GetSitemapXml, string>
     {
         private readonly ISitemapGenerator _sitemapGenerator;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
-        public GetSitemapXMLHandler(ISitemapGenerator sitemapGenerator, ICacheManager cacheManager)
+        public GetSitemapXMLHandler(ISitemapGenerator sitemapGenerator, ICacheBase cacheManager)
         {
             _sitemapGenerator = sitemapGenerator;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
         }
 
         public async Task<string> Handle(GetSitemapXml request, CancellationToken cancellationToken)
@@ -26,7 +26,7 @@ namespace Grand.Web.Features.Handlers.Common
                 request.Language.Id,
                 string.Join(",", request.Customer.GetCustomerRoleIds()),
                 request.Store.Id);
-            var siteMap = await _cacheManager.GetAsync(cacheKey, () => _sitemapGenerator.Generate(request.UrlHelper, request.Id, request.Language.Id, request.Store.Id));
+            var siteMap = await _cacheBase.GetAsync(cacheKey, () => _sitemapGenerator.Generate(request.UrlHelper, request.Id, request.Language.Id, request.Store.Id));
             return siteMap;
         }
     }

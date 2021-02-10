@@ -32,7 +32,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
         private readonly ICurrencyService _currencyService;
         private readonly IPriceFormatter _priceFormatter;
         private readonly IShoppingCartService _shoppingCartService;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IOrderTotalCalculationService _orderTotalCalculationService;
         private readonly IPictureService _pictureService;
         private readonly IProductService _productService;
@@ -50,7 +50,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             ICurrencyService currencyService,
             IPriceFormatter priceFormatter,
             IShoppingCartService shoppingCartService,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IOrderTotalCalculationService orderTotalCalculationService,
             IPictureService pictureService,
             IProductService productService,
@@ -67,7 +67,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             _currencyService = currencyService;
             _priceFormatter = priceFormatter;
             _shoppingCartService = shoppingCartService;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _orderTotalCalculationService = orderTotalCalculationService;
             _pictureService = pictureService;
             _productService = productService;

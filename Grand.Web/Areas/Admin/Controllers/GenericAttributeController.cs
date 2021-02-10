@@ -25,7 +25,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         #region Fields
 
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly ILocalizationService _localizationService;
         private readonly IWorkContext _workContext;
         private readonly IServiceProvider _serviceProvider;
@@ -35,11 +35,11 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         #region Constructors
 
-        public GenericAttributeController(IGenericAttributeService genericAttributeService, ICacheManager cacheManager, ILocalizationService localizationService,
+        public GenericAttributeController(IGenericAttributeService genericAttributeService, ICacheBase cacheManager, ILocalizationService localizationService,
             IWorkContext workContext, IPermissionService permissionService, IServiceProvider serviceProvider)
         {
             _genericAttributeService = genericAttributeService;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _localizationService = localizationService;
             _workContext = workContext;
             _permissionService = permissionService;
@@ -274,7 +274,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
                 //TO DO - temporary solution
                 //After add new attribute we need clear cache
-                await _cacheManager.Clear();
+                await _cacheBase.Clear();
 
                 return Json(new
                 {
@@ -305,7 +305,7 @@ namespace Grand.Web.Areas.Admin.Controllers
                 await _genericAttributeService.SaveAttribute(model.ObjectType, model.Id, model.Key, string.Empty, model.StoreId);
                 //TO DO - temporary solution
                 //After delete attribute we need clear cache
-                await _cacheManager.Clear();
+                await _cacheBase.Clear();
                 return Json(new
                 {
                     success = true,

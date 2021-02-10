@@ -24,26 +24,26 @@ namespace Grand.Plugin.Tax.CountryStateZip.Infrastructure.Cache
         public const string ALL_TAX_RATES_MODEL_KEY = "Grand.plugins.tax.countrystatezip.all";
         public const string ALL_TAX_RATES_PATTERN_KEY = "Grand.plugins.tax.countrystatezip";
 
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
         public ModelCacheEventConsumer(IServiceProvider serviceProvider)
         {
             //TODO inject static cache manager using constructor
-            this._cacheManager = serviceProvider.GetRequiredService<ICacheManager>();
+            this._cacheBase = serviceProvider.GetRequiredService<ICacheBase>();
         }
 
         //tax rates
         public async Task Handle(EntityInserted<TaxRate> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(ALL_TAX_RATES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(ALL_TAX_RATES_PATTERN_KEY);
         }
         public async Task Handle(EntityUpdated<TaxRate> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(ALL_TAX_RATES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(ALL_TAX_RATES_PATTERN_KEY);
         }
         public async Task Handle(EntityDeleted<TaxRate> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(ALL_TAX_RATES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(ALL_TAX_RATES_PATTERN_KEY);
         }
     }
 }

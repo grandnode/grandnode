@@ -23,7 +23,7 @@ namespace Grand.Services.Messages
         private readonly IStoreMappingService _storeMappingService;
         private readonly CatalogSettings _catalogSettings;
         private readonly IMediator _mediator;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
         #endregion
 
@@ -37,13 +37,13 @@ namespace Grand.Services.Messages
         /// <param name="messageTemplateRepository">Message template repository</param>
         /// <param name="catalogSettings">Catalog settings</param>
         /// <param name="mediator">Mediator</param>
-        public MessageTemplateService(ICacheManager cacheManager,
+        public MessageTemplateService(ICacheBase cacheManager,
             IStoreMappingService storeMappingService,
             IRepository<MessageTemplate> messageTemplateRepository,
             CatalogSettings catalogSettings,
             IMediator mediator)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _storeMappingService = storeMappingService;
             _messageTemplateRepository = messageTemplateRepository;
             _catalogSettings = catalogSettings;
@@ -65,7 +65,7 @@ namespace Grand.Services.Messages
 
             await _messageTemplateRepository.DeleteAsync(messageTemplate);
 
-            await _cacheManager.RemoveByPrefix(CacheKey.MESSAGETEMPLATES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.MESSAGETEMPLATES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(messageTemplate);
@@ -82,7 +82,7 @@ namespace Grand.Services.Messages
 
             await _messageTemplateRepository.InsertAsync(messageTemplate);
 
-            await _cacheManager.RemoveByPrefix(CacheKey.MESSAGETEMPLATES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.MESSAGETEMPLATES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(messageTemplate);
@@ -99,7 +99,7 @@ namespace Grand.Services.Messages
 
             await _messageTemplateRepository.UpdateAsync(messageTemplate);
 
-            await _cacheManager.RemoveByPrefix(CacheKey.MESSAGETEMPLATES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.MESSAGETEMPLATES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(messageTemplate);
@@ -127,7 +127,7 @@ namespace Grand.Services.Messages
                 throw new ArgumentException("messageTemplateName");
 
             string key = string.Format(CacheKey.MESSAGETEMPLATES_BY_NAME_KEY, messageTemplateName, storeId);
-            return await _cacheManager.GetAsync(key, async () =>
+            return await _cacheBase.GetAsync(key, async () =>
             {
                 var query = _messageTemplateRepository.Table;
 
@@ -156,7 +156,7 @@ namespace Grand.Services.Messages
         public virtual async Task<IList<MessageTemplate>> GetAllMessageTemplates(string storeId)
         {
             string key = string.Format(CacheKey.MESSAGETEMPLATES_ALL_KEY, storeId);
-            return await _cacheManager.GetAsync(key, () =>
+            return await _cacheBase.GetAsync(key, () =>
             {
                 var query = _messageTemplateRepository.Table;
 

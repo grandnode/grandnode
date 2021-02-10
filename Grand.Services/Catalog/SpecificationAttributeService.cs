@@ -23,7 +23,7 @@ namespace Grand.Services.Catalog
 
         private readonly IRepository<Product> _productRepository;
         private readonly IRepository<SpecificationAttribute> _specificationAttributeRepository;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IMediator _mediator;
 
         #endregion
@@ -36,12 +36,12 @@ namespace Grand.Services.Catalog
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="specificationAttributeRepository">Specification attribute repository</param>
         /// <param name="mediator">Mediator</param>
-        public SpecificationAttributeService(ICacheManager cacheManager,
+        public SpecificationAttributeService(ICacheBase cacheManager,
             IRepository<SpecificationAttribute> specificationAttributeRepository,
             IRepository<Product> productRepository,
             IMediator mediator)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _specificationAttributeRepository = specificationAttributeRepository;
             _mediator = mediator;
             _productRepository = productRepository;
@@ -61,7 +61,7 @@ namespace Grand.Services.Catalog
         public virtual async Task<SpecificationAttribute> GetSpecificationAttributeById(string specificationAttributeId)
         {
             string key = string.Format(CacheKey.SPECIFICATION_BY_ID_KEY, specificationAttributeId);
-            return await _cacheManager.GetAsync(key, () => _specificationAttributeRepository.GetByIdAsync(specificationAttributeId));
+            return await _cacheBase.GetAsync(key, () => _specificationAttributeRepository.GetByIdAsync(specificationAttributeId));
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Grand.Services.Catalog
             sename = sename.ToLowerInvariant();
 
             var key = string.Format(CacheKey.SPECIFICATION_BY_SENAME, sename);
-            return await _cacheManager.GetAsync(key, async () => await _specificationAttributeRepository.Table.Where(x => x.SeName == sename).FirstOrDefaultAsync());
+            return await _cacheBase.GetAsync(key, async () => await _specificationAttributeRepository.Table.Where(x => x.SeName == sename).FirstOrDefaultAsync());
         }
 
 
@@ -112,8 +112,8 @@ namespace Grand.Services.Catalog
             await _specificationAttributeRepository.DeleteAsync(specificationAttribute);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CacheKey.SPECIFICATION_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.SPECIFICATION_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(specificationAttribute);
@@ -131,7 +131,7 @@ namespace Grand.Services.Catalog
             await _specificationAttributeRepository.InsertAsync(specificationAttribute);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(CacheKey.SPECIFICATION_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.SPECIFICATION_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(specificationAttribute);
@@ -149,7 +149,7 @@ namespace Grand.Services.Catalog
             await _specificationAttributeRepository.UpdateAsync(specificationAttribute);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(CacheKey.SPECIFICATION_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.SPECIFICATION_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(specificationAttribute);
@@ -170,7 +170,7 @@ namespace Grand.Services.Catalog
                 return await Task.FromResult<SpecificationAttribute>(null);
 
             string key = string.Format(CacheKey.SPECIFICATION_BY_OPTIONID_KEY, specificationAttributeOptionId);
-            return await _cacheManager.GetAsync(key, async () =>
+            return await _cacheBase.GetAsync(key, async () =>
             {
                 var query = from p in _specificationAttributeRepository.Table
                             where p.SpecificationAttributeOptions.Any(x => x.Id == specificationAttributeOptionId)
@@ -202,8 +202,8 @@ namespace Grand.Services.Catalog
             await UpdateSpecificationAttribute(specificationAttribute);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(CacheKey.SPECIFICATION_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.SPECIFICATION_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(specificationAttributeOption);
@@ -228,7 +228,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productSpecificationAttribute.ProductId), update);
 
             //clear cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productSpecificationAttribute.ProductId));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productSpecificationAttribute.ProductId));
 
             //event notification
             await _mediator.EntityDeleted(productSpecificationAttribute);
@@ -248,7 +248,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productSpecificationAttribute.ProductId), update);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productSpecificationAttribute.ProductId));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productSpecificationAttribute.ProductId));
 
             //event notification
             await _mediator.EntityInserted(productSpecificationAttribute);
@@ -278,7 +278,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productSpecificationAttribute.ProductId));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productSpecificationAttribute.ProductId));
 
             //event notification
             await _mediator.EntityUpdated(productSpecificationAttribute);

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Core.Caching.Redis
 {
-    public class RedisMessageCacheManager : MemoryCacheManager, ICacheManager
+    public class RedisMessageCacheManager : MemoryCacheBase, ICacheBase
     {
         private readonly IMemoryCache _cache;
         private readonly IMessageBus _messageBus;

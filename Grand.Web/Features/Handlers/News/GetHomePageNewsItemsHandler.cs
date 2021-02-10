@@ -20,7 +20,7 @@ namespace Grand.Web.Features.Handlers.News
 {
     public class GetHomePageNewsItemsHandler : IRequestHandler<GetHomePageNewsItems, HomePageNewsItemsModel>
     {
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly INewsService _newsService;
@@ -31,11 +31,11 @@ namespace Grand.Web.Features.Handlers.News
         private readonly NewsSettings _newsSettings;
         private readonly MediaSettings _mediaSettings;
 
-        public GetHomePageNewsItemsHandler(ICacheManager cacheManager, IWorkContext workContext, IStoreContext storeContext,
+        public GetHomePageNewsItemsHandler(ICacheBase cacheManager, IWorkContext workContext, IStoreContext storeContext,
             INewsService newsService, IDateTimeHelper dateTimeHelper, IPictureService pictureService, 
             ILocalizationService localizationService, NewsSettings newsSettings, MediaSettings mediaSettings)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _workContext = workContext;
             _storeContext = storeContext;
             _newsService = newsService;
@@ -49,7 +49,7 @@ namespace Grand.Web.Features.Handlers.News
         public async Task<HomePageNewsItemsModel> Handle(GetHomePageNewsItems request, CancellationToken cancellationToken)
         {
             var cacheKey = string.Format(ModelCacheEventConst.HOMEPAGE_NEWSMODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var model = await _cacheManager.GetAsync(cacheKey, async () =>
+            var model = await _cacheBase.GetAsync(cacheKey, async () =>
             {
                 var newsItems = await _newsService.GetAllNews(_storeContext.CurrentStore.Id, 0, _newsSettings.MainPageNewsCount);
                 var hpnitemodel = new HomePageNewsItemsModel();
@@ -79,7 +79,7 @@ namespace Grand.Web.Features.Handlers.News
                 int pictureSize = _mediaSettings.NewsListThumbPictureSize;
                 var categoryPictureCacheKey = string.Format(ModelCacheEventConst.NEWS_PICTURE_MODEL_KEY, newsItem.Id, pictureSize, true,
                     _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-                model.PictureModel = await _cacheManager.GetAsync(categoryPictureCacheKey, async () =>
+                model.PictureModel = await _cacheBase.GetAsync(categoryPictureCacheKey, async () =>
                 {
                     var pictureModel = new PictureModel {
                         Id = newsItem.PictureId,

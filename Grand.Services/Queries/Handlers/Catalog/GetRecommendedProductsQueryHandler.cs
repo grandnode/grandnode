@@ -19,22 +19,22 @@ namespace Grand.Services.Queries.Handlers.Catalog
     {
        
         private readonly IProductService _productService;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IRepository<CustomerRoleProduct> _customerRoleProductRepository;
 
         public GetRecommendedProductsQueryHandler(
             IProductService productService,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IRepository<CustomerRoleProduct> customerRoleProductRepository)
         {
             _productService = productService;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _customerRoleProductRepository = customerRoleProductRepository;
         }
 
         public async Task<IList<Product>> Handle(GetRecommendedProductsQuery request, CancellationToken cancellationToken)
         {
-            return await _cacheManager.GetAsync(string.Format(CacheKey.PRODUCTS_CUSTOMER_ROLE, string.Join(",", request.CustomerRoleIds)), async () =>
+            return await _cacheBase.GetAsync(string.Format(CacheKey.PRODUCTS_CUSTOMER_ROLE, string.Join(",", request.CustomerRoleIds)), async () =>
             {
                 var query = from cr in _customerRoleProductRepository.Table
                             where request.CustomerRoleIds.Contains(cr.CustomerRoleId)

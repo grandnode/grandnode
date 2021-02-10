@@ -12,20 +12,20 @@ namespace Grand.Web.Features.Handlers.Catalog
 {
     public class GetCategoryTemplateViewPathHandler : IRequestHandler<GetCategoryTemplateViewPath, string>
     {
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly ICategoryTemplateService _categoryTemplateService;
 
-        public GetCategoryTemplateViewPathHandler(ICacheManager cacheManager, 
+        public GetCategoryTemplateViewPathHandler(ICacheBase cacheManager, 
             ICategoryTemplateService categoryTemplateService)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _categoryTemplateService = categoryTemplateService;
         }
 
         public async Task<string> Handle(GetCategoryTemplateViewPath request, CancellationToken cancellationToken)
         {
             var templateCacheKey = string.Format(ModelCacheEventConst.CATEGORY_TEMPLATE_MODEL_KEY, request.TemplateId);
-            var templateViewPath = await _cacheManager.GetAsync(templateCacheKey, async () =>
+            var templateViewPath = await _cacheBase.GetAsync(templateCacheKey, async () =>
             {
                 var template = await _categoryTemplateService.GetCategoryTemplateById(request.TemplateId);
                 if (template == null)

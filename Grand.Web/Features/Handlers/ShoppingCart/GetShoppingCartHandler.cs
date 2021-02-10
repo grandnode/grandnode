@@ -40,7 +40,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
 {
     public class GetShoppingCartHandler : IRequestHandler<GetShoppingCart, ShoppingCartModel>
     {
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IPaymentService _paymentService;
         private readonly IProductService _productService;
         private readonly IPictureService _pictureService;
@@ -72,7 +72,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
         private readonly CommonSettings _commonSettings;
 
         public GetShoppingCartHandler(
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IPaymentService paymentService,
             IProductService productService,
             IPictureService pictureService,
@@ -102,7 +102,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             ShippingSettings shippingSettings,
             CommonSettings commonSettings)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _paymentService = paymentService;
             _productService = productService;
             _pictureService = pictureService;

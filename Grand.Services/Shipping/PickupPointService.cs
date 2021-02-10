@@ -19,7 +19,7 @@ namespace Grand.Services.Shipping
 
         private readonly IRepository<PickupPoint> _pickupPointsRepository;
         private readonly IMediator _mediator;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         
         #endregion
 
@@ -31,11 +31,11 @@ namespace Grand.Services.Shipping
         public PickupPointService(
             IRepository<PickupPoint> pickupPointsRepository,
             IMediator mediator,
-            ICacheManager cacheManager)
+            ICacheBase cacheManager)
         {
             _pickupPointsRepository = pickupPointsRepository;
             _mediator = mediator;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
         }
 
         #endregion
@@ -49,7 +49,7 @@ namespace Grand.Services.Shipping
         public virtual Task<PickupPoint> GetPickupPointById(string pickupPointId)
         {
             var key = string.Format(CacheKey.PICKUPPOINTS_BY_ID_KEY, pickupPointId);
-            return _cacheManager.GetAsync(key, () => _pickupPointsRepository.GetByIdAsync(pickupPointId));
+            return _cacheBase.GetAsync(key, () => _pickupPointsRepository.GetByIdAsync(pickupPointId));
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace Grand.Services.Shipping
         /// <returns>Warehouses</returns>
         public virtual async Task<IList<PickupPoint>> GetAllPickupPoints()
         {
-            return await _cacheManager.GetAsync(CacheKey.PICKUPPOINTS_ALL, () =>
+            return await _cacheBase.GetAsync(CacheKey.PICKUPPOINTS_ALL, () =>
             {
                 var query = from pp in _pickupPointsRepository.Table
                             orderby pp.DisplayOrder
@@ -90,7 +90,7 @@ namespace Grand.Services.Shipping
             await _pickupPointsRepository.InsertAsync(pickupPoint);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(CacheKey.PICKUPPOINTS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PICKUPPOINTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(pickupPoint);
@@ -108,7 +108,7 @@ namespace Grand.Services.Shipping
             await _pickupPointsRepository.UpdateAsync(pickupPoint);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(CacheKey.PICKUPPOINTS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PICKUPPOINTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(pickupPoint);
@@ -126,7 +126,7 @@ namespace Grand.Services.Shipping
             await _pickupPointsRepository.DeleteAsync(pickupPoint);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(CacheKey.PICKUPPOINTS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PICKUPPOINTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(pickupPoint);

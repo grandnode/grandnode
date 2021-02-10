@@ -18,7 +18,7 @@ namespace Grand.Web.Components
         #region Fields
         private readonly IProductService _productService;
         private readonly IMediator _mediator;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IOrderReportService _orderReportService;
         private readonly IStoreContext _storeContext;
         private readonly CatalogSettings _catalogSettings;
@@ -29,7 +29,7 @@ namespace Grand.Web.Components
         public ProductsAlsoPurchasedViewComponent(
             IProductService productService,
             IMediator mediator,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IOrderReportService orderReportService,
             IStoreContext storeContext,
             CatalogSettings catalogSettings
@@ -38,7 +38,7 @@ namespace Grand.Web.Components
             _productService = productService;
             _catalogSettings = catalogSettings;
             _mediator = mediator;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _orderReportService = orderReportService;
             _storeContext = storeContext;
         }
@@ -53,7 +53,7 @@ namespace Grand.Web.Components
                 return Content("");
 
             //load and cache report
-            var productIds = await _cacheManager.GetAsync(string.Format(ModelCacheEventConst.PRODUCTS_ALSO_PURCHASED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
+            var productIds = await _cacheBase.GetAsync(string.Format(ModelCacheEventConst.PRODUCTS_ALSO_PURCHASED_IDS_KEY, productId, _storeContext.CurrentStore.Id),
                 () =>
                     _orderReportService
                     .GetAlsoPurchasedProductsIds(_storeContext.CurrentStore.Id, productId, _catalogSettings.ProductsAlsoPurchasedNumber)

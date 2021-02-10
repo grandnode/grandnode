@@ -18,7 +18,7 @@ namespace Grand.Services.Tests.Commands.Handlers.Catalog
     public class UpdateProductReviewTotalsCommandHandlerTest
     {
         private Mock<IRepository<Product>> _productRepositoryMock;
-        private Mock<ICacheManager> _cacheManagerMock;
+        private Mock<ICacheBase> _cacheBaseMock;
         private UpdateProductReviewTotalsCommandHandler _updateProductReviewTotalsCommandHandler;
         private Mock<IMongoCollection<Product>> _mongoCollectionMock;
         private Mock<IProductReviewService> _productReviewServiceMock;
@@ -41,7 +41,7 @@ namespace Grand.Services.Tests.Commands.Handlers.Catalog
             _productRepositoryMock = new Mock<IRepository<Product>>();
             _productRepositoryMock.Setup(x => x.Collection).Returns(_mongoCollectionMock.Object);
 
-            _cacheManagerMock = new Mock<ICacheManager>();
+            _cacheBaseMock = new Mock<ICacheBase>();
 
             _productReviewServiceMock = new Mock<IProductReviewService>();
             IPagedList<ProductReview> pagedListReviews = new PagedList<ProductReview>( reviews, 0, 234567);
@@ -56,7 +56,7 @@ namespace Grand.Services.Tests.Commands.Handlers.Catalog
             _updateProductReviewTotalsCommandHandler = new UpdateProductReviewTotalsCommandHandler(
                 _productRepositoryMock.Object,
                 _productReviewServiceMock.Object,
-                _cacheManagerMock.Object);
+                _cacheBaseMock.Object);
         }
 
         [TestMethod()]

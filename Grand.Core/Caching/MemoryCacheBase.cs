@@ -13,7 +13,7 @@ namespace Grand.Core.Caching
     /// <summary>
     /// Represents a manager for memory caching (long term caching)
     /// </summary>
-    public partial class MemoryCacheManager : ICacheManager
+    public partial class MemoryCacheBase : ICacheBase
     {
         #region Fields
 
@@ -35,12 +35,12 @@ namespace Grand.Core.Caching
 
         #region Ctor
 
-        static MemoryCacheManager()
+        static MemoryCacheBase()
         {
             _allKeys = new ConcurrentDictionary<string, bool>();
         }
 
-        public MemoryCacheManager(IMemoryCache cache, IMediator mediator)
+        public MemoryCacheBase(IMemoryCache cache, IMediator mediator)
         {
             _cache = cache;
             _mediator = mediator;
@@ -188,30 +188,6 @@ namespace Grand.Core.Caching
                 _cache.Set(AddKey(key), data, GetMemoryCacheEntryOptions(cacheTime));
             }
             return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Adds the specified key and object to the cache
-        /// </summary>
-        /// <param name="key">Key of cached item</param>
-        /// <param name="data">Value for caching</param>
-        /// <param name="cacheTime">Cache time in minutes</param>
-        public void Set(string key, object data, int cacheTime)
-        {
-            if (data != null)
-            {
-                _cache.Set(AddKey(key), data, GetMemoryCacheEntryOptions(cacheTime));
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the value associated with the specified key is cached
-        /// </summary>
-        /// <param name="key">Key of cached item</param>
-        /// <returns>True if item already is in cache; otherwise false</returns>
-        public virtual bool IsSet(string key)
-        {
-            return _cache.TryGetValue(key, out object _);
         }
 
         /// <summary>

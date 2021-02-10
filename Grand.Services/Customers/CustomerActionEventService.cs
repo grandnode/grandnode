@@ -22,7 +22,7 @@ namespace Grand.Services.Customers
         private readonly IRepository<CustomerAction> _customerActionRepository;
         private readonly IRepository<CustomerActionHistory> _customerActionHistoryRepository;
         private readonly IRepository<CustomerActionType> _customerActionTypeRepository;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IMediator _mediator;
 
         #endregion
@@ -33,13 +33,13 @@ namespace Grand.Services.Customers
             IRepository<CustomerAction> customerActionRepository,
             IRepository<CustomerActionType> customerActionTypeRepository,
             IRepository<CustomerActionHistory> customerActionHistoryRepository,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IMediator mediator)
         {
             _customerActionRepository = customerActionRepository;
             _customerActionTypeRepository = customerActionTypeRepository;
             _customerActionHistoryRepository = customerActionHistoryRepository;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _mediator = mediator;
         }
 
@@ -49,7 +49,7 @@ namespace Grand.Services.Customers
 
         protected async Task<IList<CustomerActionType>> GetAllCustomerActionType()
         {
-            return await _cacheManager.GetAsync(CacheKey.CUSTOMER_ACTION_TYPE, () =>
+            return await _cacheBase.GetAsync(CacheKey.CUSTOMER_ACTION_TYPE, () =>
             {
                 return _customerActionTypeRepository.Table.ToListAsync();
             });

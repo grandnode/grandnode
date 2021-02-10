@@ -28,7 +28,7 @@ namespace Grand.Core.Tests
             */
             var eventPublisher = new Mock<IMediator>();
 
-            ICacheManager icacheManager = new MemoryCacheManager(new MemoryCache(new MemoryCacheOptions { }), eventPublisher.Object);
+            ICacheBase icacheManager = new MemoryCacheBase(new MemoryCache(new MemoryCacheOptions { }), eventPublisher.Object);
             await icacheManager.SetAsync("key1001", 33, int.MaxValue);
             await icacheManager.SetAsync("key1202", 1244, int.MaxValue);
             await icacheManager.SetAsync("key1003", 512, int.MaxValue);

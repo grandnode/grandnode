@@ -26,7 +26,7 @@ namespace Grand.Services.Customers
         private readonly IRepository<CustomerTagProduct> _customerTagProductRepository;
         private readonly IRepository<Customer> _customerRepository;
         private readonly IMediator _mediator;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
         #endregion
 
@@ -39,14 +39,14 @@ namespace Grand.Services.Customers
             IRepository<CustomerTagProduct> customerTagProductRepository,
             IRepository<Customer> customerRepository,
             IMediator mediator,
-            ICacheManager cacheManager
+            ICacheBase cacheManager
             )
         {
             _customerTagRepository = customerTagRepository;
             _customerTagProductRepository = customerTagProductRepository;
             _mediator = mediator;
             _customerRepository = customerRepository;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
         }
 
         #endregion
@@ -205,7 +205,7 @@ namespace Grand.Services.Customers
         public virtual async Task<IList<CustomerTagProduct>> GetCustomerTagProducts(string customerTagId)
         {
             string key = string.Format(CacheKey.CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagId);
-            return await _cacheManager.GetAsync(key, () =>
+            return await _cacheBase.GetAsync(key, () =>
             {
                 var query = from cr in _customerTagProductRepository.Table
                             where (cr.CustomerTagId == customerTagId)
@@ -252,8 +252,8 @@ namespace Grand.Services.Customers
             await _customerTagProductRepository.InsertAsync(customerTagProduct);
 
             //clear cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_CUSTOMER_TAG_PATTERN);
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
+            await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTS_CUSTOMER_TAG_PATTERN);
 
             //event notification
             await _mediator.EntityInserted(customerTagProduct);
@@ -271,8 +271,8 @@ namespace Grand.Services.Customers
             await _customerTagProductRepository.UpdateAsync(customerTagProduct);
 
             //clear cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_CUSTOMER_TAG_PATTERN);
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
+            await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTS_CUSTOMER_TAG_PATTERN);
 
             //event notification
             await _mediator.EntityUpdated(customerTagProduct);
@@ -290,8 +290,8 @@ namespace Grand.Services.Customers
             await _customerTagProductRepository.DeleteAsync(customerTagProduct);
 
             //clear cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_CUSTOMER_TAG_PATTERN);
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.CUSTOMERTAGPRODUCTS_ROLE_KEY, customerTagProduct.CustomerTagId));
+            await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTS_CUSTOMER_TAG_PATTERN);
             //event notification
             await _mediator.EntityDeleted(customerTagProduct);
         }

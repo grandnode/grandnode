@@ -19,22 +19,22 @@ namespace Grand.Services.Queries.Handlers.Catalog
     {
         
         private readonly IProductService _productService;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IRepository<CustomerProduct> _customerProductRepository;
 
         public GetPersonalizedProductsQueryHandler(
             IProductService productService,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IRepository<CustomerProduct> customerProductRepository)
         {
             _productService = productService;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _customerProductRepository = customerProductRepository;
         }
 
         public async Task<IList<Product>> Handle(GetPersonalizedProductsQuery request, CancellationToken cancellationToken)
         {
-            return await _cacheManager.GetAsync(string.Format(CacheKey.PRODUCTS_CUSTOMER_PERSONAL_KEY, request.CustomerId), async () =>
+            return await _cacheBase.GetAsync(string.Format(CacheKey.PRODUCTS_CUSTOMER_PERSONAL_KEY, request.CustomerId), async () =>
             {
                 var query = from cr in _customerProductRepository.Table
                             where cr.CustomerId == request.CustomerId

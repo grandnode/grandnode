@@ -13,24 +13,24 @@ namespace Grand.Web.Infrastructure.Cache
         INotificationHandler<EntityDeleted<NewsItem>>
     {
 
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
-        public NewsItemNotificatioHandler(ICacheManager cacheManager)
+        public NewsItemNotificatioHandler(ICacheBase cacheManager)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
         }
 
         public async Task Handle(EntityInserted<NewsItem> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.NEWS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(ModelCacheEventConst.NEWS_PATTERN_KEY);
         }
         public async Task Handle(EntityUpdated<NewsItem> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.NEWS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(ModelCacheEventConst.NEWS_PATTERN_KEY);
         }
         public async Task Handle(EntityDeleted<NewsItem> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.NEWS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(ModelCacheEventConst.NEWS_PATTERN_KEY);
         }
     }
 }

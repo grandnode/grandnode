@@ -35,14 +35,14 @@ namespace Grand.Services.Customers
         private readonly IRepository<CustomerHistoryPassword> _customerHistoryPasswordProductRepository;
         private readonly IRepository<CustomerNote> _customerNoteRepository;
         private readonly IGenericAttributeService _genericAttributeService;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IMediator _mediator;
 
         #endregion
 
         #region Ctor
 
-        public CustomerService(ICacheManager cacheManager,
+        public CustomerService(ICacheBase cacheManager,
             IRepository<Customer> customerRepository,
             IRepository<CustomerRole> customerRoleRepository,
             IRepository<CustomerHistoryPassword> customerHistoryPasswordProductRepository,
@@ -51,7 +51,7 @@ namespace Grand.Services.Customers
             IGenericAttributeService genericAttributeService,
             IMediator mediator)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _customerRepository = customerRepository;
             _customerRoleRepository = customerRoleRepository;
             _customerHistoryPasswordProductRepository = customerHistoryPasswordProductRepository;
@@ -758,7 +758,7 @@ namespace Grand.Services.Customers
             var updatefilter = builder.PullFilter(x => x.CustomerRoles, y => y.Id == customerRole.Id);
             await _customerRepository.Collection.UpdateManyAsync(new BsonDocument(), updatefilter);
 
-            await _cacheManager.RemoveByPrefix(CacheKey.CUSTOMERROLES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.CUSTOMERROLES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(customerRole);
@@ -775,7 +775,7 @@ namespace Grand.Services.Customers
                 return Task.FromResult<CustomerRole>(null);
 
             string key = string.Format(CacheKey.CUSTOMERROLES_BY_KEY, customerRoleId);
-            return _cacheManager.GetAsync(key, () =>
+            return _cacheBase.GetAsync(key, () =>
             {
                 return _customerRoleRepository.GetByIdAsync(customerRoleId);
             });
@@ -791,7 +791,7 @@ namespace Grand.Services.Customers
         public virtual Task<CustomerRole> GetCustomerRoleBySystemName(string systemName)
         {
             string key = string.Format(CacheKey.CUSTOMERROLES_BY_SYSTEMNAME_KEY, systemName);
-            return _cacheManager.GetAsync(key, () =>
+            return _cacheBase.GetAsync(key, () =>
             {
                 var filter = Builders<CustomerRole>.Filter.Eq(x => x.SystemName, systemName);
                 return _customerRoleRepository.Collection.Find(filter).FirstOrDefaultAsync();
@@ -824,7 +824,7 @@ namespace Grand.Services.Customers
 
             await _customerRoleRepository.InsertAsync(customerRole);
 
-            await _cacheManager.RemoveByPrefix(CacheKey.CUSTOMERROLES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.CUSTOMERROLES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(customerRole);
@@ -848,7 +848,7 @@ namespace Grand.Services.Customers
 
             await _customerRepository.Collection.UpdateManyAsync(filter, update);
 
-            await _cacheManager.RemoveByPrefix(CacheKey.CUSTOMERROLES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.CUSTOMERROLES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(customerRole);
@@ -901,8 +901,8 @@ namespace Grand.Services.Customers
             await _customerRoleProductRepository.DeleteAsync(customerRoleProduct);
 
             //clear cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_CUSTOMER_ROLE_PATTERN);
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
+            await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTS_CUSTOMER_ROLE_PATTERN);
 
             //event notification
             await _mediator.EntityDeleted(customerRoleProduct);
@@ -921,8 +921,8 @@ namespace Grand.Services.Customers
             await _customerRoleProductRepository.InsertAsync(customerRoleProduct);
 
             //clear cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_CUSTOMER_ROLE_PATTERN);
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
+            await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTS_CUSTOMER_ROLE_PATTERN);
 
             //event notification
             await _mediator.EntityInserted(customerRoleProduct);
@@ -944,8 +944,8 @@ namespace Grand.Services.Customers
             await _customerRoleProductRepository.Collection.UpdateOneAsync(filter, update);
 
             //clear cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_CUSTOMER_ROLE_PATTERN);
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleProduct.CustomerRoleId));
+            await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTS_CUSTOMER_ROLE_PATTERN);
 
             //event notification
             await _mediator.EntityUpdated(customerRoleProduct);
@@ -960,7 +960,7 @@ namespace Grand.Services.Customers
         public virtual async Task<IList<CustomerRoleProduct>> GetCustomerRoleProducts(string customerRoleId)
         {
             string key = string.Format(CacheKey.CUSTOMERROLESPRODUCTS_ROLE_KEY, customerRoleId);
-            return await _cacheManager.GetAsync(key, () =>
+            return await _cacheBase.GetAsync(key, () =>
             {
                 var filter = Builders<CustomerRoleProduct>.Filter.Eq(x => x.CustomerRoleId, customerRoleId);
                 return _customerRoleProductRepository.Collection.Find(filter).SortBy(x => x.DisplayOrder).ToListAsync();

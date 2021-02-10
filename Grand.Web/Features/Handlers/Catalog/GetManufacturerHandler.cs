@@ -26,7 +26,7 @@ namespace Grand.Web.Features.Handlers.Catalog
         private readonly IWebHelper _webHelper;
         private readonly IPriceFormatter _priceFormatter;
         private readonly ICurrencyService _currencyService;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -37,7 +37,7 @@ namespace Grand.Web.Features.Handlers.Catalog
             IWebHelper webHelper,
             IPriceFormatter priceFormatter,
             ICurrencyService currencyService,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             ISpecificationAttributeService specificationAttributeService,
             IHttpContextAccessor httpContextAccessor,
             CatalogSettings catalogSettings)
@@ -46,7 +46,7 @@ namespace Grand.Web.Features.Handlers.Catalog
             _webHelper = webHelper;
             _priceFormatter = priceFormatter;
             _currencyService = currencyService;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _specificationAttributeService = specificationAttributeService;
             _httpContextAccessor = httpContextAccessor;
             _catalogSettings = catalogSettings;
@@ -94,7 +94,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                     request.Manufacturer.Id,
                     string.Join(",", request.Customer.GetCustomerRoleIds()),
                     request.Store.Id);
-                var hasFeaturedProductsCache = await _cacheManager.GetAsync<bool?>(cacheKey, async () =>
+                var hasFeaturedProductsCache = await _cacheBase.GetAsync<bool?>(cacheKey, async () =>
                 { 
                     var featuredProducts = (await _mediator.Send(new GetSearchProductsQuery() {
                         PageSize = _catalogSettings.LimitOfFeaturedProducts,
@@ -155,7 +155,7 @@ namespace Grand.Web.Features.Handlers.Catalog
             //specs
             await model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
                 products.filterableSpecificationAttributeOptionIds,
-                _specificationAttributeService, _webHelper, _cacheManager, request.Language.Id);
+                _specificationAttributeService, _webHelper, _cacheBase, request.Language.Id);
 
             return model;
         }

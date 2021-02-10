@@ -23,7 +23,7 @@ namespace Grand.Services.Security
         private readonly IRepository<PermissionRecord> _permissionRecordRepository;
         private readonly IRepository<PermissionAction> _permissionActionRepository;
         private readonly IWorkContext _workContext;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
         #endregion
 
@@ -40,12 +40,12 @@ namespace Grand.Services.Security
             IRepository<PermissionRecord> permissionRecordRepository,
             IRepository<PermissionAction> permissionActionRepository,
             IWorkContext workContext,
-            ICacheManager cacheManager)
+            ICacheBase cacheManager)
         {
             _permissionRecordRepository = permissionRecordRepository;
             _permissionActionRepository = permissionActionRepository;
             _workContext = workContext;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
         }
 
         #endregion
@@ -64,7 +64,7 @@ namespace Grand.Services.Security
                 return false;
 
             string key = string.Format(CacheKey.PERMISSIONS_ALLOWED_KEY, customerRole.Id, permissionRecordSystemName);
-            return await _cacheManager.GetAsync(key, async () =>
+            return await _cacheBase.GetAsync(key, async () =>
             {
                 var permissionRecord = await _permissionRecordRepository.Table.FirstOrDefaultAsync(x => x.SystemName == permissionRecordSystemName);
                 return permissionRecord?.CustomerRoles.Contains(customerRole.Id) ?? false;
@@ -86,7 +86,7 @@ namespace Grand.Services.Security
 
             await _permissionRecordRepository.DeleteAsync(permission);
 
-            await _cacheManager.RemoveByPrefix(CacheKey.PERMISSIONS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Grand.Services.Security
 
             await _permissionRecordRepository.InsertAsync(permission);
 
-            await _cacheManager.RemoveByPrefix(CacheKey.PERMISSIONS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace Grand.Services.Security
 
             await _permissionRecordRepository.UpdateAsync(permission);
 
-            await _cacheManager.RemoveByPrefix(CacheKey.PERMISSIONS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -239,7 +239,7 @@ namespace Grand.Services.Security
             //insert
             await _permissionActionRepository.InsertAsync(permissionAction);
             //clear cache
-            await _cacheManager.RemoveByPrefix(CacheKey.PERMISSIONS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -254,7 +254,7 @@ namespace Grand.Services.Security
             //delete
             await _permissionActionRepository.DeleteAsync(permissionAction);
             //clear cache
-            await _cacheManager.RemoveByPrefix(CacheKey.PERMISSIONS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PERMISSIONS_PATTERN_KEY);
         }
 
         /// <summary>
@@ -278,7 +278,7 @@ namespace Grand.Services.Security
                     continue;
 
                 var key = string.Format(CacheKey.PERMISSIONS_ALLOWED_ACTION_KEY, role.Id, permissionRecordSystemName, permissionActionName);
-                var permissionAction = await _cacheManager.GetAsync(key, async () =>
+                var permissionAction = await _cacheBase.GetAsync(key, async () =>
                 {
                     return await _permissionActionRepository.Table
                         .FirstOrDefaultAsync(x => x.SystemName == permissionRecordSystemName && x.CustomerRoleId == role.Id && x.Action == permissionActionName);

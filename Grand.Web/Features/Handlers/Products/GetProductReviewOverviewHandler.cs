@@ -12,16 +12,16 @@ namespace Grand.Web.Features.Handlers.Products
 {
     public class GetProductReviewOverviewHandler : IRequestHandler<GetProductReviewOverview, ProductReviewOverviewModel>
     {
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IProductReviewService _productReviewService;
         private readonly CatalogSettings _catalogSettings;
 
         public GetProductReviewOverviewHandler(
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IProductReviewService productReviewService, 
             CatalogSettings catalogSettings)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _productReviewService = productReviewService;
             _catalogSettings = catalogSettings;
         }
@@ -34,7 +34,7 @@ namespace Grand.Web.Features.Handlers.Products
             {
                 string cacheKey = string.Format(ModelCacheEventConst.PRODUCT_REVIEWS_MODEL_KEY, request.Product.Id, request.Store.Id);
 
-                productReview = await _cacheManager.GetAsync(cacheKey, async () =>
+                productReview = await _cacheBase.GetAsync(cacheKey, async () =>
                 {
                     return new ProductReviewOverviewModel {
                         RatingSum = await _productReviewService.RatingSumProduct(request.Product.Id, _catalogSettings.ShowProductReviewsPerStore ? request.Store.Id : ""),

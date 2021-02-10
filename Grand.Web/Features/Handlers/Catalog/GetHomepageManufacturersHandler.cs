@@ -18,20 +18,20 @@ namespace Grand.Web.Features.Handlers.Catalog
 {
     public class GetHomepageManufacturersHandler : IRequestHandler<GetHomepageManufacturers, IList<ManufacturerModel>>
     {
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IManufacturerService _manufacturerService;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
         private readonly MediaSettings _mediaSettings;
 
         public GetHomepageManufacturersHandler(
-            ICacheManager cacheManager, 
+            ICacheBase cacheManager, 
             IManufacturerService manufacturerService, 
             IPictureService pictureService, 
             ILocalizationService localizationService, 
             MediaSettings mediaSettings)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _manufacturerService = manufacturerService;
             _pictureService = pictureService;
             _localizationService = localizationService;
@@ -42,7 +42,7 @@ namespace Grand.Web.Features.Handlers.Catalog
         {
             string manufacturersCacheKey = string.Format(ModelCacheEventConst.MANUFACTURER_HOMEPAGE_KEY, request.Store.Id, request.Language.Id);
 
-            var model = await _cacheManager.GetAsync(manufacturersCacheKey, async () =>
+            var model = await _cacheBase.GetAsync(manufacturersCacheKey, async () =>
             {
                 var modelManuf = new List<ManufacturerModel>();
                 var manuf = await _manufacturerService.GetAllManufacturers(storeId: request.Store.Id);

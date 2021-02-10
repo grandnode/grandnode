@@ -24,7 +24,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
 
         private readonly IMediator _mediator;
         private readonly IRepository<TaxRate> _taxRateRepository;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
         #endregion
 
@@ -37,11 +37,11 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="taxRateRepository">Tax rate repository</param>
         public TaxRateService(IMediator mediator,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IRepository<TaxRate> taxRateRepository)
         {
             _mediator = mediator;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _taxRateRepository = taxRateRepository;
         }
 
@@ -60,7 +60,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
 
             await _taxRateRepository.DeleteAsync(taxRate);
 
-            await _cacheManager.RemoveByPrefix(TAXRATE_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(TAXRATE_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(taxRate);
@@ -73,7 +73,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
         public virtual async Task<IPagedList<TaxRate>> GetAllTaxRates(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             string key = string.Format(TAXRATE_ALL_KEY, pageIndex, pageSize);
-            return await _cacheManager.GetAsync(key, async () =>
+            return await _cacheBase.GetAsync(key, async () =>
             {
                 var query = from tr in _taxRateRepository.Table
                             orderby tr.StoreId, tr.CountryId, tr.StateProvinceId, tr.Zip, tr.TaxCategoryId
@@ -103,7 +103,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
 
             await _taxRateRepository.InsertAsync(taxRate);
 
-            await _cacheManager.RemoveByPrefix(TAXRATE_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(TAXRATE_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(taxRate);
@@ -120,7 +120,7 @@ namespace Grand.Plugin.Tax.CountryStateZip.Services
 
             await _taxRateRepository.UpdateAsync(taxRate);
 
-            await _cacheManager.RemoveByPrefix(TAXRATE_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(TAXRATE_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(taxRate);

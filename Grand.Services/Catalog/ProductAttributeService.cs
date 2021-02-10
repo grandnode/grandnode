@@ -24,7 +24,7 @@ namespace Grand.Services.Catalog
         private readonly IRepository<ProductAttribute> _productAttributeRepository;
         private readonly IRepository<Product> _productRepository;
         private readonly IMediator _mediator;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
 
         #endregion
@@ -38,12 +38,12 @@ namespace Grand.Services.Catalog
         /// <param name="productAttributeRepository">Product attribute repository</param>
         /// <param name="productAttributeCombinationRepository">Product attribute combination repository</param>
         /// <param name="mediator">Mediator</param>
-        public ProductAttributeService(ICacheManager cacheManager,
+        public ProductAttributeService(ICacheBase cacheManager,
             IRepository<ProductAttribute> productAttributeRepository,
             IRepository<Product> productRepository,
             IMediator mediator)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _productAttributeRepository = productAttributeRepository;
             _productRepository = productRepository;
             _mediator = mediator;
@@ -70,11 +70,11 @@ namespace Grand.Services.Catalog
             await _productAttributeRepository.DeleteAsync(productAttribute);
 
             //cache
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTEMAPPINGS_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTEVALUES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTECOMBINATIONS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTEMAPPINGS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTECOMBINATIONS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(productAttribute);
@@ -89,7 +89,7 @@ namespace Grand.Services.Catalog
         public virtual async Task<IPagedList<ProductAttribute>> GetAllProductAttributes(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             string key = string.Format(CacheKey.PRODUCTATTRIBUTES_ALL_KEY, pageIndex, pageSize);
-            return await _cacheManager.GetAsync(key, () =>
+            return await _cacheBase.GetAsync(key, () =>
             {
                 var query = from pa in _productAttributeRepository.Table
                             orderby pa.Name
@@ -106,7 +106,7 @@ namespace Grand.Services.Catalog
         public virtual Task<ProductAttribute> GetProductAttributeById(string productAttributeId)
         {
             string key = string.Format(CacheKey.PRODUCTATTRIBUTES_BY_ID_KEY, productAttributeId);
-            return _cacheManager.GetAsync(key, () => _productAttributeRepository.GetByIdAsync(productAttributeId));
+            return _cacheBase.GetAsync(key, () => _productAttributeRepository.GetByIdAsync(productAttributeId));
         }
 
         /// <summary>
@@ -121,10 +121,10 @@ namespace Grand.Services.Catalog
             await _productAttributeRepository.InsertAsync(productAttribute);
 
             //cache
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTEMAPPINGS_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTEVALUES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTECOMBINATIONS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTEMAPPINGS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTECOMBINATIONS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(productAttribute);
@@ -142,10 +142,10 @@ namespace Grand.Services.Catalog
             await _productAttributeRepository.UpdateAsync(productAttribute);
 
             //cache
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTEMAPPINGS_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTEVALUES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTECOMBINATIONS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTEMAPPINGS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTATTRIBUTECOMBINATIONS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(productAttribute);
@@ -169,7 +169,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(new BsonDocument("_id", productAttributeMapping.ProductId), update);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productAttributeMapping.ProductId));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productAttributeMapping.ProductId));
 
             //event notification
             await _mediator.EntityDeleted(productAttributeMapping);
@@ -189,7 +189,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", productAttributeMapping.ProductId), update);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productAttributeMapping.ProductId));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productAttributeMapping.ProductId));
 
             //event notification
             await _mediator.EntityInserted(productAttributeMapping);
@@ -230,7 +230,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productAttributeMapping.ProductId));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productAttributeMapping.ProductId));
 
             //event notification
             await _mediator.EntityUpdated(productAttributeMapping);
@@ -269,7 +269,7 @@ namespace Grand.Services.Catalog
             }
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productAttributeValue.ProductId));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productAttributeValue.ProductId));
 
             //event notification
             await _mediator.EntityDeleted(productAttributeValue);
@@ -295,7 +295,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productAttributeValue.ProductId));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productAttributeValue.ProductId));
 
             //event notification
             await _mediator.EntityInserted(productAttributeValue);
@@ -346,7 +346,7 @@ namespace Grand.Services.Catalog
             }
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productAttributeValue.ProductId));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, productAttributeValue.ProductId));
 
             //event notification
             await _mediator.EntityUpdated(productAttributeValue);
@@ -391,7 +391,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", combination.ProductId), update);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, combination.ProductId));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, combination.ProductId));
 
             //event notification
             await _mediator.EntityDeleted(combination);
@@ -411,7 +411,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(new BsonDocument("_id", combination.ProductId), update);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, combination.ProductId));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, combination.ProductId));
 
             //event notification
             await _mediator.EntityInserted(combination);
@@ -445,7 +445,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, combination.ProductId));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, combination.ProductId));
 
             //event notification
             await _mediator.EntityUpdated(combination);

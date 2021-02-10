@@ -18,14 +18,14 @@ namespace Grand.Services.Commands.Handlers.Catalog
 
         private readonly IRepository<Product> _productRepository;
         private readonly IProductReviewService _productReviewService;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
         #endregion
 
-        public UpdateProductReviewTotalsCommandHandler(IRepository<Product> productRepository, IProductReviewService productReviewService, ICacheManager cacheManager)
+        public UpdateProductReviewTotalsCommandHandler(IRepository<Product> productRepository, IProductReviewService productReviewService, ICacheBase cacheManager)
         {
             _productRepository = productRepository;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _productReviewService = productReviewService;
         }
 
@@ -71,7 +71,7 @@ namespace Grand.Services.Commands.Handlers.Catalog
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, request.Product.Id));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, request.Product.Id));
 
             return true;
         }

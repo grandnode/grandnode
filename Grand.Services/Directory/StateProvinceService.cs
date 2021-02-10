@@ -25,7 +25,7 @@ namespace Grand.Services.Directory
 
         private readonly IRepository<StateProvince> _stateProvinceRepository;
         private readonly IMediator _mediator;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
         #endregion
 
@@ -37,11 +37,11 @@ namespace Grand.Services.Directory
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="stateProvinceRepository">State/province repository</param>
         /// <param name="mediator">Mediator</param>
-        public StateProvinceService(ICacheManager cacheManager,
+        public StateProvinceService(ICacheBase cacheManager,
             IRepository<StateProvince> stateProvinceRepository,
             IMediator mediator)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _stateProvinceRepository = stateProvinceRepository;
             _mediator = mediator;
         }
@@ -60,7 +60,7 @@ namespace Grand.Services.Directory
 
             await _stateProvinceRepository.DeleteAsync(stateProvince);
 
-            await _cacheManager.RemoveByPrefix(CacheKey.STATEPROVINCES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.STATEPROVINCES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(stateProvince);
@@ -77,7 +77,7 @@ namespace Grand.Services.Directory
                 return null;
 
             var key = string.Format(CacheKey.STATEPROVINCES_BY_KEY, stateProvinceId);
-            return await _cacheManager.GetAsync(key, () => _stateProvinceRepository.GetByIdAsync(stateProvinceId));
+            return await _cacheBase.GetAsync(key, () => _stateProvinceRepository.GetByIdAsync(stateProvinceId));
 
         }
 
@@ -91,7 +91,7 @@ namespace Grand.Services.Directory
         public virtual async Task<IList<StateProvince>> GetStateProvincesByCountryId(string countryId, string languageId = "", bool showHidden = false)
         {
             string key = string.Format(CacheKey.STATEPROVINCES_ALL_KEY, countryId, languageId, showHidden);
-            return await _cacheManager.GetAsync(key, async () =>
+            return await _cacheBase.GetAsync(key, async () =>
             {
                 var query = from sp in _stateProvinceRepository.Table
                             orderby sp.DisplayOrder, sp.Name
@@ -137,7 +137,7 @@ namespace Grand.Services.Directory
 
             await _stateProvinceRepository.InsertAsync(stateProvince);
 
-            await _cacheManager.RemoveByPrefix(CacheKey.STATEPROVINCES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.STATEPROVINCES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(stateProvince);
@@ -154,7 +154,7 @@ namespace Grand.Services.Directory
 
             await _stateProvinceRepository.UpdateAsync(stateProvince);
 
-            await _cacheManager.RemoveByPrefix(CacheKey.STATEPROVINCES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.STATEPROVINCES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(stateProvince);

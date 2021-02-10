@@ -19,7 +19,7 @@ namespace Grand.Plugin.Widgets.Slider.Services
         private readonly IRepository<PictureSlider> _reporistoryPictureSlider;
         private readonly IStoreMappingService _storeMappingService;
         private readonly IStoreContext _storeContext;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
         /// <summary>
         /// Key for sliders
@@ -35,12 +35,12 @@ namespace Grand.Plugin.Widgets.Slider.Services
         #endregion
         public SliderService(IRepository<PictureSlider> reporistoryPictureSlider,
             IStoreContext storeContext, IStoreMappingService storeMappingService,
-            ICacheManager cacheManager)
+            ICacheBase cacheManager)
         {
             _reporistoryPictureSlider = reporistoryPictureSlider;
             _storeContext = storeContext;
             _storeMappingService = storeMappingService;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
         }
         /// <summary>
         /// Delete a slider
@@ -52,7 +52,7 @@ namespace Grand.Plugin.Widgets.Slider.Services
                 throw new ArgumentNullException("slide");
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(SLIDERS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(SLIDERS_PATTERN_KEY);
 
             await _reporistoryPictureSlider.DeleteAsync(slide);
         }
@@ -73,7 +73,7 @@ namespace Grand.Plugin.Widgets.Slider.Services
         public virtual async Task<IList<PictureSlider>> GetPictureSliders(SliderType sliderType, string objectEntry = "")
         {
             string cacheKey = string.Format(SLIDERS_MODEL_KEY, _storeContext.CurrentStore.Id, sliderType.ToString(), objectEntry);
-            return await _cacheManager.GetAsync(cacheKey, async () =>
+            return await _cacheBase.GetAsync(cacheKey, async () =>
             {
                 var query = from s in _reporistoryPictureSlider.Table
                             where s.SliderTypeId == (int)sliderType && s.Published
@@ -108,7 +108,7 @@ namespace Grand.Plugin.Widgets.Slider.Services
                 throw new ArgumentNullException("slide");
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(SLIDERS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(SLIDERS_PATTERN_KEY);
 
             await _reporistoryPictureSlider.InsertAsync(slide);
         }
@@ -123,7 +123,7 @@ namespace Grand.Plugin.Widgets.Slider.Services
                 throw new ArgumentNullException("slide");
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(SLIDERS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(SLIDERS_PATTERN_KEY);
 
             await _reporistoryPictureSlider.UpdateAsync(slide);
         }
@@ -138,7 +138,7 @@ namespace Grand.Plugin.Widgets.Slider.Services
                 throw new ArgumentNullException("slide");
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(SLIDERS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(SLIDERS_PATTERN_KEY);
 
             await _reporistoryPictureSlider.DeleteAsync(slide);
         }

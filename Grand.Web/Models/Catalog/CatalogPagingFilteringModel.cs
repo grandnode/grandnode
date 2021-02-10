@@ -306,7 +306,7 @@ namespace Grand.Web.Models.Catalog
             public virtual async Task PrepareSpecsFilters(IList<string> alreadyFilteredSpecOptionIds,
                 IList<string> filterableSpecificationAttributeOptionIds,
                 ISpecificationAttributeService specificationAttributeService,
-                IWebHelper webHelper, ICacheManager cacheManager, string langId)
+                IWebHelper webHelper, ICacheBase cacheManager, string langId)
             {
                 Enabled = false;
 

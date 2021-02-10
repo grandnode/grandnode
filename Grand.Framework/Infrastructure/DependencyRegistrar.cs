@@ -94,13 +94,13 @@ namespace Grand.Framework.Infrastructure
 
         private void RegisterCache(IServiceCollection serviceCollection, GrandConfig config)
         {
-            serviceCollection.AddSingleton<ICacheManager,MemoryCacheManager>();
+            serviceCollection.AddSingleton<ICacheBase,MemoryCacheBase>();
             if (config.RedisPubSubEnabled)
             {
                 var redis = ConnectionMultiplexer.Connect(config.RedisPubSubConnectionString);
                 serviceCollection.AddSingleton<ISubscriber>(c => redis.GetSubscriber());
                 serviceCollection.AddSingleton<IMessageBus, RedisMessageBus>();
-                serviceCollection.AddSingleton<ICacheManager,RedisMessageCacheManager>();
+                serviceCollection.AddSingleton<ICacheBase,RedisMessageCacheManager>();
             }
         }
 

@@ -15,16 +15,16 @@ namespace Grand.Web.Features.Handlers.Blogs
     public class GetBlogPostTagListHandler : IRequestHandler<GetBlogPostTagList, BlogPostTagListModel>
     {
         private readonly IBlogService _blogService;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
 
         private readonly BlogSettings _blogSettings;
 
-        public GetBlogPostTagListHandler(IBlogService blogService, ICacheManager cacheManager, IWorkContext workContext, IStoreContext storeContext, BlogSettings blogSettings)
+        public GetBlogPostTagListHandler(IBlogService blogService, ICacheBase cacheManager, IWorkContext workContext, IStoreContext storeContext, BlogSettings blogSettings)
         {
             _blogService = blogService;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _workContext = workContext;
             _storeContext = storeContext;
             _blogSettings = blogSettings;
@@ -33,7 +33,7 @@ namespace Grand.Web.Features.Handlers.Blogs
         public async Task<BlogPostTagListModel> Handle(GetBlogPostTagList request, CancellationToken cancellationToken)
         {
             var cacheKey = string.Format(ModelCacheEventConst.BLOG_TAGS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
+            var cachedModel = await _cacheBase.GetAsync(cacheKey, async () =>
             {
                 var model = new BlogPostTagListModel();
 

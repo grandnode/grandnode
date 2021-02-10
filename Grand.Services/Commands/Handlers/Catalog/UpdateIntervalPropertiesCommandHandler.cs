@@ -16,13 +16,13 @@ namespace Grand.Services.Commands.Handlers.Catalog
     {
         private readonly IRepository<Product> _productRepository;
         private readonly IMediator _mediator;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
-        public UpdateIntervalPropertiesCommandHandler(IRepository<Product> productRepository, IMediator mediator, ICacheManager cacheManager)
+        public UpdateIntervalPropertiesCommandHandler(IRepository<Product> productRepository, IMediator mediator, ICacheBase cacheManager)
         {
             _productRepository = productRepository;
             _mediator = mediator;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
         }
 
         public async Task<bool> Handle(UpdateIntervalPropertiesCommand request, CancellationToken cancellationToken)
@@ -39,7 +39,7 @@ namespace Grand.Services.Commands.Handlers.Catalog
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, request.Product.Id));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, request.Product.Id));
 
             //event notification
             await _mediator.EntityUpdated(request.Product);

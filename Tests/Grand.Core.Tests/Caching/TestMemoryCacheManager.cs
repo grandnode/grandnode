@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Grand.Core.Tests.Caching
 {
-    public class TestMemoryCacheManager : MemoryCacheManager
+    public class TestMemoryCacheManager : MemoryCacheBase
     {
         public override Task SetAsync(string key, object data, int cacheTime)
         {

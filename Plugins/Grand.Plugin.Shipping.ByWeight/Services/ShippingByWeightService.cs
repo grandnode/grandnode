@@ -19,16 +19,16 @@ namespace Grand.Plugin.Shipping.ByWeight.Services
         #region Fields
 
         private readonly IRepository<ShippingByWeightRecord> _sbwRepository;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
         #endregion
 
         #region Ctor
 
-        public ShippingByWeightService(ICacheManager cacheManager,
+        public ShippingByWeightService(ICacheBase cacheManager,
             IRepository<ShippingByWeightRecord> sbwRepository)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _sbwRepository = sbwRepository;
         }
 
@@ -43,13 +43,13 @@ namespace Grand.Plugin.Shipping.ByWeight.Services
 
             await _sbwRepository.DeleteAsync(shippingByWeightRecord);
 
-            await _cacheManager.RemoveByPrefix(SHIPPINGBYWEIGHT_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(SHIPPINGBYWEIGHT_PATTERN_KEY);
         }
 
         public virtual async Task<IPagedList<ShippingByWeightRecord>> GetAll(int pageIndex = 0, int pageSize = int.MaxValue)
         {
             string key = string.Format(SHIPPINGBYWEIGHT_ALL_KEY, pageIndex, pageSize);
-            return await _cacheManager.GetAsync(key, () =>
+            return await _cacheBase.GetAsync(key, () =>
             {
                 var query = from sbw in _sbwRepository.Table
                             orderby sbw.StoreId, sbw.CountryId, sbw.StateProvinceId, sbw.Zip, sbw.ShippingMethodId, sbw.From
@@ -140,7 +140,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Services
 
             await _sbwRepository.InsertAsync(shippingByWeightRecord);
 
-            await _cacheManager.RemoveByPrefix(SHIPPINGBYWEIGHT_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(SHIPPINGBYWEIGHT_PATTERN_KEY);
         }
 
         public virtual async Task UpdateShippingByWeightRecord(ShippingByWeightRecord shippingByWeightRecord)
@@ -150,7 +150,7 @@ namespace Grand.Plugin.Shipping.ByWeight.Services
 
             await _sbwRepository.UpdateAsync(shippingByWeightRecord);
 
-            await _cacheManager.RemoveByPrefix(SHIPPINGBYWEIGHT_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(SHIPPINGBYWEIGHT_PATTERN_KEY);
         }
 
         #endregion

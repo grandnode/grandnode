@@ -18,21 +18,21 @@ namespace Grand.Plugin.Tax.CountryStateZip
     {
         private readonly ITaxRateService _taxRateService;
         private readonly IStoreContext _storeContext;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IWebHelper _webHelper;
         private readonly ILocalizationService _localizationService;
         private readonly ILanguageService _languageService;
 
         public CountryStateZipTaxProvider(ITaxRateService taxRateService,
             IStoreContext storeContext,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IWebHelper webHelper,
             ILocalizationService localizationService, 
             ILanguageService languageService)
         {
             _taxRateService = taxRateService;
             _storeContext = storeContext;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _webHelper = webHelper;
             _localizationService = localizationService;
             _languageService = languageService;
@@ -62,7 +62,7 @@ namespace Grand.Plugin.Tax.CountryStateZip
             }
 
             const string cacheKey = ModelCacheEventConsumer.ALL_TAX_RATES_MODEL_KEY;
-            var allTaxRates = await _cacheManager.GetAsync(cacheKey, async () =>
+            var allTaxRates = await _cacheBase.GetAsync(cacheKey, async () =>
                 {
                     var taxes = await _taxRateService.GetAllTaxRates();
                     return taxes.Select(x => new TaxRateForCaching

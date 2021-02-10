@@ -29,7 +29,7 @@ namespace Grand.Web.Features.Handlers.Catalog
     public class GetSearchHandler : IRequestHandler<GetSearch, SearchModel>
     {
         private readonly ICategoryService _categoryService;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly ILocalizationService _localizationService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IVendorService _vendorService;
@@ -45,7 +45,7 @@ namespace Grand.Web.Features.Handlers.Catalog
 
         public GetSearchHandler(
             ICategoryService categoryService,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             ILocalizationService localizationService,
             IManufacturerService manufacturerService,
             IVendorService vendorService,
@@ -59,7 +59,7 @@ namespace Grand.Web.Features.Handlers.Catalog
             VendorSettings vendorSettings)
         {
             _categoryService = categoryService;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _localizationService = localizationService;
             _manufacturerService = manufacturerService;
             _vendorService = vendorService;
@@ -105,7 +105,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                request.Language.Id,
                 string.Join(",", request.Customer.GetCustomerRoleIds()),
                 request.Store.Id);
-            var categories = await _cacheManager.GetAsync(cacheKey, async () =>
+            var categories = await _cacheBase.GetAsync(cacheKey, async () =>
             {
                 var categoriesModel = new List<SearchModel.CategoryModel>();
                 //all categories
@@ -269,7 +269,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                     //specs
                     await request.Model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
                         searchproducts.filterableSpecificationAttributeOptionIds,
-                        _specificationAttributeService, _webHelper, _cacheManager, request.Language.Id);
+                        _specificationAttributeService, _webHelper, _cacheBase, request.Language.Id);
 
                     request.Model.NoResults = !request.Model.Products.Any();
 

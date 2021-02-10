@@ -21,7 +21,7 @@ namespace Grand.Web.Features.Handlers.Catalog
     {
         private readonly IMediator _mediator;
         private readonly ITopicService _topicService;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IManufacturerService _manufacturerService;
         private readonly CatalogSettings _catalogSettings;
         private readonly BlogSettings _blogSettings;
@@ -30,7 +30,7 @@ namespace Grand.Web.Features.Handlers.Catalog
         public GetTopMenuHandler(
             IMediator mediator,
             ITopicService topicService,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IManufacturerService manufacturerService,
             CatalogSettings catalogSettings,
             BlogSettings blogSettings,
@@ -38,7 +38,7 @@ namespace Grand.Web.Features.Handlers.Catalog
         {
             _mediator = mediator;
             _topicService = topicService;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _manufacturerService = manufacturerService;
             _catalogSettings = catalogSettings;
             _blogSettings = blogSettings;
@@ -63,7 +63,7 @@ namespace Grand.Web.Features.Handlers.Catalog
             string manufacturerCacheKey = string.Format(ModelCacheEventConst.MANUFACTURER_NAVIGATION_MENU,
                 request.Language.Id, request.Store.Id);
 
-            var cachedManufacturerModel = await _cacheManager.GetAsync(manufacturerCacheKey, async () =>
+            var cachedManufacturerModel = await _cacheBase.GetAsync(manufacturerCacheKey, async () =>
                     (await _manufacturerService.GetAllManufacturers(storeId: request.Store.Id))
                     .Where(x => x.IncludeInTopMenu)
                     .Select(t => new TopMenuModel.TopMenuManufacturerModel {

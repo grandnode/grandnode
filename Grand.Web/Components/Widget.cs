@@ -16,15 +16,15 @@ namespace Grand.Web.ViewComponents
     public class WidgetViewComponent : BaseViewComponent
     {
         private readonly IStoreContext _storeContext;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IWidgetService _widgetService;
         private readonly IThemeContext _themeContext;
 
-        public WidgetViewComponent(IStoreContext storeContext, ICacheManager cacheManager,
+        public WidgetViewComponent(IStoreContext storeContext, ICacheBase cacheManager,
             IWidgetService widgetService, IThemeContext themeContext)
         {
             _storeContext = storeContext;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _widgetService = widgetService;
             _themeContext = themeContext;
         }
@@ -41,7 +41,7 @@ namespace Grand.Web.ViewComponents
                 { "additionalData", additionalData}
             };
 
-            var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
+            var cachedModel = await _cacheBase.GetAsync(cacheKey, async () =>
             {
                 //model
                 var model = new List<RenderWidgetModel>();

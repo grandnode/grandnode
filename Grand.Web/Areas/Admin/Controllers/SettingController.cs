@@ -81,7 +81,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly IMediator _mediator;
         private readonly IReturnRequestService _returnRequestService;
         private readonly ILanguageService _languageService;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
         #endregion
 
@@ -107,7 +107,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             IMediator mediator,
             IReturnRequestService returnRequestService,
             ILanguageService languageService,
-            ICacheManager cacheManager)
+            ICacheBase cacheManager)
         {
             _settingService = settingService;
             _countryService = countryService;
@@ -129,7 +129,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             _mediator = mediator;
             _returnRequestService = returnRequestService;
             _languageService = languageService;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
         }
 
         #endregion
@@ -151,7 +151,7 @@ namespace Grand.Web.Areas.Admin.Controllers
 
         protected async Task ClearCache()
         {
-            await _cacheManager.Clear();
+            await _cacheBase.Clear();
         }
 
         public async Task<IActionResult> ChangeStoreScopeConfiguration(string storeid, string returnUrl = "")

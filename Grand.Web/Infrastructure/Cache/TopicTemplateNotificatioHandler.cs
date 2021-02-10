@@ -12,24 +12,24 @@ namespace Grand.Web.Infrastructure.Cache
         INotificationHandler<EntityUpdated<TopicTemplate>>,
         INotificationHandler<EntityDeleted<TopicTemplate>>
     {
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
-        public TopicTemplateNotificatioHandler(ICacheManager cacheManager)
+        public TopicTemplateNotificatioHandler(ICacheBase cacheManager)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
         }
 
         public async Task Handle(EntityInserted<TopicTemplate> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.TOPIC_TEMPLATE_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(ModelCacheEventConst.TOPIC_TEMPLATE_PATTERN_KEY);
         }
         public async Task Handle(EntityUpdated<TopicTemplate> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.TOPIC_TEMPLATE_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(ModelCacheEventConst.TOPIC_TEMPLATE_PATTERN_KEY);
         }
         public async Task Handle(EntityDeleted<TopicTemplate> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(ModelCacheEventConst.TOPIC_TEMPLATE_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(ModelCacheEventConst.TOPIC_TEMPLATE_PATTERN_KEY);
         }
 
     }

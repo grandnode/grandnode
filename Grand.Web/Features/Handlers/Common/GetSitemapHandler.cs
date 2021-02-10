@@ -28,7 +28,7 @@ namespace Grand.Web.Features.Handlers.Common
 {
     public class GetSitemapHandler : IRequestHandler<GetSitemap, SitemapModel>
     {
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly ICategoryService _categoryService;
         private readonly IManufacturerService _manufacturerService;
         private readonly IProductService _productService;
@@ -41,7 +41,7 @@ namespace Grand.Web.Features.Handlers.Common
         private readonly NewsSettings _newsSettings;
         private readonly KnowledgebaseSettings _knowledgebaseSettings;
 
-        public GetSitemapHandler(ICacheManager cacheManager,
+        public GetSitemapHandler(ICacheBase cacheManager,
             ICategoryService categoryService,
             IManufacturerService manufacturerService,
             IProductService productService,
@@ -53,7 +53,7 @@ namespace Grand.Web.Features.Handlers.Common
             NewsSettings newsSettings,
             KnowledgebaseSettings knowledgebaseSettings)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _categoryService = categoryService;
             _manufacturerService = manufacturerService;
             _productService = productService;
@@ -73,7 +73,7 @@ namespace Grand.Web.Features.Handlers.Common
                 request.Language.Id,
                 string.Join(",", request.Customer.GetCustomerRoleIds()),
                 request.Store.Id);
-            var cachedModel = await _cacheManager.GetAsync(cacheKey, async () =>
+            var cachedModel = await _cacheBase.GetAsync(cacheKey, async () =>
             {
                 var model = new SitemapModel {
                     BlogEnabled = _blogSettings.Enabled,

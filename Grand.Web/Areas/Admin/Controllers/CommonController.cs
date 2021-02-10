@@ -467,7 +467,7 @@ namespace Grand.Web.Areas.Admin.Controllers
             return View(model);
         }
 
-        public async Task<IActionResult> ClearCache(string returnUrl, [FromServices] ICacheManager cacheManager)
+        public async Task<IActionResult> ClearCache(string returnUrl, [FromServices] ICacheBase cacheManager)
         {
             await cacheManager.Clear();
 

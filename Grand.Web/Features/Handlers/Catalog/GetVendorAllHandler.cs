@@ -22,7 +22,7 @@ namespace Grand.Web.Features.Handlers.Catalog
         private readonly IVendorService _vendorService;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IMediator _mediator;
         private readonly MediaSettings _mediaSettings;
         private readonly VendorSettings _vendorSettings;
@@ -31,7 +31,7 @@ namespace Grand.Web.Features.Handlers.Catalog
             IVendorService vendorService,
             IPictureService pictureService,
             ILocalizationService localizationService,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IMediator mediator,
             MediaSettings mediaSettings,
             VendorSettings vendorSettings)
@@ -39,7 +39,7 @@ namespace Grand.Web.Features.Handlers.Catalog
             _vendorService = vendorService;
             _pictureService = pictureService;
             _localizationService = localizationService;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _mediator = mediator;
             _mediaSettings = mediaSettings;
             _vendorSettings = vendorSettings;
@@ -47,7 +47,7 @@ namespace Grand.Web.Features.Handlers.Catalog
 
         public async Task<IList<VendorModel>> Handle(GetVendorAll request, CancellationToken cancellationToken)
         {
-            return await _cacheManager.GetAsync(ModelCacheEventConst.VENDOR_ALL_MODEL_KEY, () => PrepareVendorAll(request));
+            return await _cacheBase.GetAsync(ModelCacheEventConst.VENDOR_ALL_MODEL_KEY, () => PrepareVendorAll(request));
         }
 
         private async Task<List<VendorModel>> PrepareVendorAll(GetVendorAll request)

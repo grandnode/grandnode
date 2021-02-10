@@ -19,7 +19,7 @@ namespace Grand.Services.Shipping
 
         private readonly IRepository<DeliveryDate> _deliveryDateRepository;
         private readonly IMediator _mediator;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
         #endregion
 
@@ -31,11 +31,11 @@ namespace Grand.Services.Shipping
         public DeliveryDateService(
             IRepository<DeliveryDate> deliveryDateRepository,
             IMediator mediator,
-            ICacheManager cacheManager)
+            ICacheBase cacheManager)
         {
             _deliveryDateRepository = deliveryDateRepository;
             _mediator = mediator;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
         }
 
         #endregion
@@ -50,7 +50,7 @@ namespace Grand.Services.Shipping
         public virtual Task<DeliveryDate> GetDeliveryDateById(string deliveryDateId)
         {
             string key = string.Format(CacheKey.DELIVERYDATE_BY_ID_KEY, deliveryDateId);
-            return _cacheManager.GetAsync(key, () => _deliveryDateRepository.GetByIdAsync(deliveryDateId));
+            return _cacheBase.GetAsync(key, () => _deliveryDateRepository.GetByIdAsync(deliveryDateId));
         }
 
         /// <summary>
@@ -59,7 +59,7 @@ namespace Grand.Services.Shipping
         /// <returns>Delivery dates</returns>
         public virtual async Task<IList<DeliveryDate>> GetAllDeliveryDates()
         {
-            return await _cacheManager.GetAsync(CacheKey.DELIVERYDATE_ALL, () =>
+            return await _cacheBase.GetAsync(CacheKey.DELIVERYDATE_ALL, () =>
             {
                 var query = from dd in _deliveryDateRepository.Table
                             orderby dd.DisplayOrder
@@ -95,7 +95,7 @@ namespace Grand.Services.Shipping
             await _deliveryDateRepository.UpdateAsync(deliveryDate);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(CacheKey.DELIVERYDATE_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.DELIVERYDATE_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(deliveryDate);
@@ -113,10 +113,10 @@ namespace Grand.Services.Shipping
             await _deliveryDateRepository.DeleteAsync(deliveryDate);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(CacheKey.DELIVERYDATE_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.DELIVERYDATE_PATTERN_KEY);
 
             //clear product cache
-            await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTS_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(deliveryDate);

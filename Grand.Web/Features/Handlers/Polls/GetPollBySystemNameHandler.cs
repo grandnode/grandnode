@@ -15,20 +15,20 @@ namespace Grand.Web.Features.Handlers.Polls
 {
     public class GetPollBySystemNameHandler : IRequestHandler<GetPollBySystemName, PollModel>
     {
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly IPollService _pollService;
         private readonly IAclService _aclService;
 
         public GetPollBySystemNameHandler(
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IWorkContext workContext,
             IStoreContext storeContext,
             IPollService pollService,
             IAclService aclService)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _workContext = workContext;
             _storeContext = storeContext;
             _pollService = pollService;
@@ -38,7 +38,7 @@ namespace Grand.Web.Features.Handlers.Polls
         public async Task<PollModel> Handle(GetPollBySystemName request, CancellationToken cancellationToken)
         {
             var cacheKey = string.Format(ModelCacheEventConst.POLL_BY_SYSTEMNAME__MODEL_KEY, request.SystemName, _storeContext.CurrentStore.Id);
-            var model = await _cacheManager.GetAsync(cacheKey, async () =>
+            var model = await _cacheBase.GetAsync(cacheKey, async () =>
             {
                 var poll = await _pollService.GetPollBySystemKeyword(request.SystemName, _storeContext.CurrentStore.Id);
                 //ACL (access control list)

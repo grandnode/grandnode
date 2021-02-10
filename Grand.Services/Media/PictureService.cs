@@ -41,7 +41,7 @@ namespace Grand.Services.Media
         private readonly IMediator _mediator;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IStoreContext _storeContext;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly MediaSettings _mediaSettings;
 
         #endregion
@@ -65,7 +65,7 @@ namespace Grand.Services.Media
             IMediator mediator,
             IWebHostEnvironment hostingEnvironment,
             IStoreContext storeContext,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             MediaSettings mediaSettings)
         {
             _pictureRepository = pictureRepository;
@@ -74,7 +74,7 @@ namespace Grand.Services.Media
             _mediator = mediator;
             _hostingEnvironment = hostingEnvironment;
             _storeContext = storeContext;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _mediaSettings = mediaSettings;
         }
 
@@ -355,7 +355,7 @@ namespace Grand.Services.Media
             PictureType defaultPictureType = PictureType.Entity)
         {
             var pictureKey = string.Format(CacheKey.PICTURE_BY_KEY, pictureId, _storeContext.CurrentStore?.Id, targetSize, showDefaultPicture, storeLocation, defaultPictureType);
-            return await _cacheManager.GetAsync(pictureKey, async () =>
+            return await _cacheBase.GetAsync(pictureKey, async () =>
             {
                 var picture = await GetPictureById(pictureId);
                 return await GetPictureUrl(picture, targetSize, showDefaultPicture, storeLocation, defaultPictureType);

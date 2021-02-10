@@ -20,7 +20,7 @@ namespace Grand.Services.Shipping
 
         private readonly IRepository<ShippingMethod> _shippingMethodRepository;
         private readonly IMediator _mediator;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
         #endregion
 
@@ -32,11 +32,11 @@ namespace Grand.Services.Shipping
         public ShippingMethodService(
             IRepository<ShippingMethod> shippingMethodRepository,
             IMediator mediator,
-            ICacheManager cacheManager)
+            ICacheBase cacheManager)
         {
             _shippingMethodRepository = shippingMethodRepository;
             _mediator = mediator;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
         }
 
         #endregion
@@ -56,7 +56,7 @@ namespace Grand.Services.Shipping
             await _shippingMethodRepository.DeleteAsync(shippingMethod);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(CacheKey.SHIPPINGMETHOD_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(shippingMethod);
@@ -70,7 +70,7 @@ namespace Grand.Services.Shipping
         public virtual Task<ShippingMethod> GetShippingMethodById(string shippingMethodId)
         {
             string key = string.Format(CacheKey.SHIPPINGMETHOD_BY_ID_KEY, shippingMethodId);
-            return _cacheManager.GetAsync(key, () => _shippingMethodRepository.GetByIdAsync(shippingMethodId));
+            return _cacheBase.GetAsync(key, () => _shippingMethodRepository.GetByIdAsync(shippingMethodId));
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Grand.Services.Shipping
         {
             var shippingMethods = new List<ShippingMethod>();
 
-            shippingMethods = await _cacheManager.GetAsync(CacheKey.SHIPPINGMETHOD_ALL, () =>
+            shippingMethods = await _cacheBase.GetAsync(CacheKey.SHIPPINGMETHOD_ALL, () =>
             {
                 var query = from sm in _shippingMethodRepository.Table
                             orderby sm.DisplayOrder
@@ -114,7 +114,7 @@ namespace Grand.Services.Shipping
             await _shippingMethodRepository.InsertAsync(shippingMethod);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(CacheKey.SHIPPINGMETHOD_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(shippingMethod);
@@ -132,7 +132,7 @@ namespace Grand.Services.Shipping
             await _shippingMethodRepository.UpdateAsync(shippingMethod);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(CacheKey.SHIPPINGMETHOD_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.SHIPPINGMETHOD_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(shippingMethod);

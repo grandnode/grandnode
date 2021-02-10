@@ -21,19 +21,19 @@ namespace Grand.Web.Features.Handlers.Catalog
         private readonly IManufacturerService _manufacturerService;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly MediaSettings _mediaSettings;
 
         public GetManufacturerAllHandler(IManufacturerService manufacturerService,
             IPictureService pictureService,
             ILocalizationService localizationService,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             MediaSettings mediaSettings)
         {
             _manufacturerService = manufacturerService;
             _pictureService = pictureService;
             _localizationService = localizationService;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _mediaSettings = mediaSettings;
         }
 
@@ -43,7 +43,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                 request.Language.Id,
                 string.Join(",", request.Customer.GetCustomerRoleIds()),
                 request.Store.Id);
-            return await _cacheManager.GetAsync(cacheKey, () => PrepareManufacturerAll(request));            
+            return await _cacheBase.GetAsync(cacheKey, () => PrepareManufacturerAll(request));            
         }
 
         private async Task<List<ManufacturerModel>> PrepareManufacturerAll(GetManufacturerAll request)

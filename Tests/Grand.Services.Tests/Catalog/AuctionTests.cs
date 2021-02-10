@@ -20,7 +20,7 @@ namespace Grand.Services.Tests.Catalog
         private IAuctionService _auctionService;
         private IMediator _eventPublisher;
         private IProductService _productService;
-        private ICacheManager _cacheManager;
+        private ICacheBase _cacheBase;
         private IServiceProvider _serviceProvider;
 
         [TestInitialize()]
@@ -36,11 +36,11 @@ namespace Grand.Services.Tests.Catalog
             var productService = new Mock<IProductService>();
             _productService = productService.Object;
 
-            _cacheManager = new Mock<ICacheManager>().Object;
+            _cacheBase = new Mock<ICacheBase>().Object;
 
             _serviceProvider = new Mock<IServiceProvider>().Object;
 
-            _auctionService = new AuctionService(_bidRepository, _productService, _productRepository, _cacheManager, _eventPublisher);
+            _auctionService = new AuctionService(_bidRepository, _productService, _productRepository, _cacheBase, _eventPublisher);
 
             _productRepository.Insert(new Product
             {
@@ -243,7 +243,7 @@ namespace Grand.Services.Tests.Catalog
             var productService = new Mock<IProductService>();
             productService.Setup(x => x.GetProductById(cancelProductBid.Id, false)).ReturnsAsync(cancelProductBid);
             var _cancelproductService = productService.Object;
-            var _cancelauctionService = new AuctionService(_bidRepository, _cancelproductService, _productRepository, _cacheManager, _eventPublisher);
+            var _cancelauctionService = new AuctionService(_bidRepository, _cancelproductService, _productRepository, _cacheBase, _eventPublisher);
 
             Bid bid = new Bid();
             bid.Amount = 1;

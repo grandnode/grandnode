@@ -25,7 +25,7 @@ namespace Grand.Services.Messages
 
         private readonly IRepository<ContactAttribute> _contactAttributeRepository;
         private readonly IMediator _mediator;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IWorkContext _workContext;
         private readonly CatalogSettings _catalogSettings;
 
@@ -39,13 +39,13 @@ namespace Grand.Services.Messages
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="contactAttributeRepository">Contact attribute repository</param>
         /// <param name="mediator">Mediator</param>
-        public ContactAttributeService(ICacheManager cacheManager,
+        public ContactAttributeService(ICacheBase cacheManager,
             IRepository<ContactAttribute> contactAttributeRepository,
             IMediator mediator,
             IWorkContext workContext,
             CatalogSettings catalogSettings)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _contactAttributeRepository = contactAttributeRepository;
             _mediator = mediator;
             _workContext = workContext;
@@ -69,8 +69,8 @@ namespace Grand.Services.Messages
 
             await _contactAttributeRepository.DeleteAsync(contactAttribute);
 
-            await _cacheManager.RemoveByPrefix(CacheKey.CONTACTATTRIBUTES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CacheKey.CONTACTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.CONTACTATTRIBUTES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.CONTACTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(contactAttribute);
@@ -84,7 +84,7 @@ namespace Grand.Services.Messages
         public virtual async Task<IList<ContactAttribute>> GetAllContactAttributes(string storeId = "", bool ignorAcl = false)
         {
             string key = string.Format(CacheKey.CONTACTATTRIBUTES_ALL_KEY, storeId, ignorAcl);
-            return await _cacheManager.GetAsync(key, () =>
+            return await _cacheBase.GetAsync(key, () =>
             {
                 var query = _contactAttributeRepository.Table;
                 query = query.OrderBy(c => c.DisplayOrder);
@@ -120,7 +120,7 @@ namespace Grand.Services.Messages
         public virtual Task<ContactAttribute> GetContactAttributeById(string contactAttributeId)
         {
             string key = string.Format(CacheKey.CONTACTATTRIBUTES_BY_ID_KEY, contactAttributeId);
-            return _cacheManager.GetAsync(key, () => _contactAttributeRepository.GetByIdAsync(contactAttributeId));
+            return _cacheBase.GetAsync(key, () => _contactAttributeRepository.GetByIdAsync(contactAttributeId));
         }
 
         /// <summary>
@@ -134,8 +134,8 @@ namespace Grand.Services.Messages
 
             await _contactAttributeRepository.InsertAsync(contactAttribute);
 
-            await _cacheManager.RemoveByPrefix(CacheKey.CONTACTATTRIBUTES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CacheKey.CONTACTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.CONTACTATTRIBUTES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.CONTACTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(contactAttribute);
@@ -152,8 +152,8 @@ namespace Grand.Services.Messages
 
             await _contactAttributeRepository.UpdateAsync(contactAttribute);
 
-            await _cacheManager.RemoveByPrefix(CacheKey.CONTACTATTRIBUTES_PATTERN_KEY);
-            await _cacheManager.RemoveByPrefix(CacheKey.CONTACTATTRIBUTEVALUES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.CONTACTATTRIBUTES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.CONTACTATTRIBUTEVALUES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(contactAttribute);

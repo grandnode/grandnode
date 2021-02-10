@@ -19,7 +19,7 @@ namespace Grand.Services.Catalog
         #region Fields
 
         private readonly IProductService _productService;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly CatalogSettings _catalogSettings;
         private readonly IRepository<RecentlyViewedProduct> _recentlyViewedProducts;
 
@@ -36,12 +36,12 @@ namespace Grand.Services.Catalog
         /// <param name="recentlyViewedProducts">Collection recentlyViewedProducts</param>
         public RecentlyViewedProductsService(
             IProductService productService,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             CatalogSettings catalogSettings, 
             IRepository<RecentlyViewedProduct> recentlyViewedProducts)
         {
             _productService = productService;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _catalogSettings = catalogSettings;
             _recentlyViewedProducts = recentlyViewedProducts;
         }
@@ -68,7 +68,7 @@ namespace Grand.Services.Catalog
         protected async Task<IList<string>> GetRecentlyViewedProductsIds(string customerId, int number)
         {
             string key = string.Format(CacheKey.RECENTLY_VIEW_PRODUCTS_KEY, customerId, number);
-            return await _cacheManager.GetAsync(key, async () =>
+            return await _cacheBase.GetAsync(key, async () =>
             {
                 var query = from p in _recentlyViewedProducts.Table
                              where p.CustomerId == customerId
@@ -128,7 +128,7 @@ namespace Grand.Services.Catalog
             }
 
             //Clear cache
-            await _cacheManager.RemoveByPrefixAsync(string.Format(CacheKey.RECENTLY_VIEW_PRODUCTS_PATTERN_KEY, customerId));
+            await _cacheBase.RemoveByPrefixAsync(string.Format(CacheKey.RECENTLY_VIEW_PRODUCTS_PATTERN_KEY, customerId));
 
         }
 

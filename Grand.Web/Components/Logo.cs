@@ -16,7 +16,7 @@ namespace Grand.Web.ViewComponents
     {
         private readonly IStoreContext _storeContext;
         private readonly IWorkContext _workContext;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IPictureService _pictureService;
         private readonly IThemeContext _themeContext;
 
@@ -24,14 +24,14 @@ namespace Grand.Web.ViewComponents
 
         public LogoViewComponent(IStoreContext storeContext,
             IWorkContext workContext,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IPictureService pictureService,
             IThemeContext themeContext,
             StoreInformationSettings storeInformationSettings)
         {
             _storeContext = storeContext;
             _workContext = workContext;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _pictureService = pictureService;
             _themeContext = themeContext;
             _storeInformationSettings = storeInformationSettings;
@@ -50,7 +50,7 @@ namespace Grand.Web.ViewComponents
             };
 
             var cacheKey = string.Format(ModelCacheEventConst.STORE_LOGO_PATH, _storeContext.CurrentStore.Id, _themeContext.WorkingThemeName);
-            model.LogoPath = await _cacheManager.GetAsync(cacheKey, async () =>
+            model.LogoPath = await _cacheBase.GetAsync(cacheKey, async () =>
             {
                 var logo = "";
                 var picture = await _pictureService.GetPictureById(_storeInformationSettings.LogoPictureId);

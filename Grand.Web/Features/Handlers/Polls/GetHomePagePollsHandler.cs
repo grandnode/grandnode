@@ -16,25 +16,25 @@ namespace Grand.Web.Features.Handlers.Polls
     {
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IPollService _pollService;
 
         public GetHomePagePollsHandler(IWorkContext workContext,
             IStoreContext storeContext,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IPollService pollService
             )
         {
             _workContext = workContext;
             _storeContext = storeContext;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _pollService = pollService;
         }
 
         public async Task<IList<PollModel>> Handle(GetHomePagePolls request, CancellationToken cancellationToken)
         {
             var cacheKey = string.Format(ModelCacheEventConst.HOMEPAGE_POLLS_MODEL_KEY, _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-            var model = await _cacheManager.GetAsync(cacheKey, async () =>
+            var model = await _cacheBase.GetAsync(cacheKey, async () =>
             {
                 var pollModels = new List<PollModel>();
                 var polls = await _pollService.GetPolls(_storeContext.CurrentStore.Id, true);

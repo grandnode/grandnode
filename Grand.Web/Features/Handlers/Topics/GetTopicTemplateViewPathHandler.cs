@@ -12,20 +12,20 @@ namespace Grand.Web.Features.Handlers.Topics
 {
     public class GetTopicTemplateViewPathHandler : IRequestHandler<GetTopicTemplateViewPath, string>
     {
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly ITopicTemplateService _topicTemplateService;
 
-        public GetTopicTemplateViewPathHandler(ICacheManager cacheManager,
+        public GetTopicTemplateViewPathHandler(ICacheBase cacheManager,
             ITopicTemplateService topicTemplateService)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _topicTemplateService = topicTemplateService;
         }
 
         public async Task<string> Handle(GetTopicTemplateViewPath request, CancellationToken cancellationToken)
         {
             var templateCacheKey = string.Format(ModelCacheEventConst.TOPIC_TEMPLATE_MODEL_KEY, request.TemplateId);
-            var templateViewPath = await _cacheManager.GetAsync(templateCacheKey, async () =>
+            var templateViewPath = await _cacheBase.GetAsync(templateCacheKey, async () =>
             {
                 var template = await _topicTemplateService.GetTopicTemplateById(request.TemplateId);
                 if (template == null)

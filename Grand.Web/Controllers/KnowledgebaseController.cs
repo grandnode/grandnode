@@ -30,7 +30,7 @@ namespace Grand.Web.Controllers
         private readonly IKnowledgebaseService _knowledgebaseService;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IAclService _aclService;
         private readonly IStoreMappingService _storeMappingService;
         private readonly ILocalizationService _localizationService;
@@ -47,7 +47,7 @@ namespace Grand.Web.Controllers
             IKnowledgebaseService knowledgebaseService,
             IWorkContext workContext,
             IStoreContext storeContext,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IAclService aclService,
             IStoreMappingService storeMappingService,
             ILocalizationService localizationService,
@@ -63,7 +63,7 @@ namespace Grand.Web.Controllers
             _knowledgebaseService = knowledgebaseService;
             _workContext = workContext;
             _storeContext = storeContext;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _aclService = aclService;
             _storeMappingService = storeMappingService;
             _localizationService = localizationService;
@@ -121,7 +121,7 @@ namespace Grand.Web.Controllers
 
             string breadcrumbCacheKey = string.Format(ModelCacheEventConst.KNOWLEDGEBASE_CATEGORY_BREADCRUMB_KEY, category.Id,
             string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()), _storeContext.CurrentStore.Id, _workContext.WorkingLanguage.Id);
-            model.CategoryBreadcrumb = await _cacheManager.GetAsync(breadcrumbCacheKey, async () =>
+            model.CategoryBreadcrumb = await _cacheBase.GetAsync(breadcrumbCacheKey, async () =>
                 (await category.GetCategoryBreadCrumb(_knowledgebaseService, _aclService, _storeMappingService))
                 .Select(catBr => new KnowledgebaseCategoryModel {
                     Id = catBr.Id,
@@ -248,7 +248,7 @@ namespace Grand.Web.Controllers
                 string.Join(",", _workContext.CurrentCustomer.GetCustomerRoleIds()),
                 _storeContext.CurrentStore.Id,
                 _workContext.WorkingLanguage.Id);
-                model.CategoryBreadcrumb = await _cacheManager.GetAsync(breadcrumbCacheKey, async () =>
+                model.CategoryBreadcrumb = await _cacheBase.GetAsync(breadcrumbCacheKey, async () =>
                     (await category.GetCategoryBreadCrumb(_knowledgebaseService, _aclService, _storeMappingService))
                     .Select(catBr => new KnowledgebaseCategoryModel {
                         Id = catBr.Id,

@@ -12,20 +12,20 @@ namespace Grand.Web.Features.Handlers.Catalog
 {
     public class GetManufacturerTemplateViewPathHandler : IRequestHandler<GetManufacturerTemplateViewPath, string>
     {
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IManufacturerTemplateService _manufacturerTemplateService;
 
-        public GetManufacturerTemplateViewPathHandler(ICacheManager cacheManager, 
+        public GetManufacturerTemplateViewPathHandler(ICacheBase cacheManager, 
             IManufacturerTemplateService manufacturerTemplateService)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _manufacturerTemplateService = manufacturerTemplateService;
         }
 
         public async Task<string> Handle(GetManufacturerTemplateViewPath request, CancellationToken cancellationToken)
         {
             var templateCacheKey = string.Format(ModelCacheEventConst.MANUFACTURER_TEMPLATE_MODEL_KEY, request.TemplateId);
-            var templateViewPath = await _cacheManager.GetAsync(templateCacheKey, async () =>
+            var templateViewPath = await _cacheBase.GetAsync(templateCacheKey, async () =>
             {
                 var template = await _manufacturerTemplateService.GetManufacturerTemplateById(request.TemplateId);
                 if (template == null)

@@ -13,27 +13,27 @@ namespace Grand.Web.Infrastructure.Cache
         INotificationHandler<EntityDeleted<ProductManufacturer>>
     {
 
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
-        public ProductManufacturerNotificatioHandler(ICacheManager cacheManager)
+        public ProductManufacturerNotificatioHandler(ICacheBase cacheManager)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
         }
 
         public async Task Handle(EntityInserted<ProductManufacturer> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCT_MANUFACTURERS_MODEL_PRODUCT_KEY, eventMessage.Entity.ProductId));
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.MANUFACTURER_HAS_FEATURED_PRODUCTS_MODEL_KEY, eventMessage.Entity.ManufacturerId));
+            await _cacheBase.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCT_MANUFACTURERS_MODEL_PRODUCT_KEY, eventMessage.Entity.ProductId));
+            await _cacheBase.RemoveByPrefix(string.Format(ModelCacheEventConst.MANUFACTURER_HAS_FEATURED_PRODUCTS_MODEL_KEY, eventMessage.Entity.ManufacturerId));
         }
         public async Task Handle(EntityUpdated<ProductManufacturer> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCT_MANUFACTURERS_MODEL_PRODUCT_KEY, eventMessage.Entity.ProductId));
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.MANUFACTURER_HAS_FEATURED_PRODUCTS_MODEL_KEY, eventMessage.Entity.ManufacturerId));
+            await _cacheBase.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCT_MANUFACTURERS_MODEL_PRODUCT_KEY, eventMessage.Entity.ProductId));
+            await _cacheBase.RemoveByPrefix(string.Format(ModelCacheEventConst.MANUFACTURER_HAS_FEATURED_PRODUCTS_MODEL_KEY, eventMessage.Entity.ManufacturerId));
         }
         public async Task Handle(EntityDeleted<ProductManufacturer> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCT_MANUFACTURERS_MODEL_PRODUCT_KEY, eventMessage.Entity.ProductId));
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.MANUFACTURER_HAS_FEATURED_PRODUCTS_MODEL_KEY, eventMessage.Entity.ManufacturerId));
+            await _cacheBase.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCT_MANUFACTURERS_MODEL_PRODUCT_KEY, eventMessage.Entity.ProductId));
+            await _cacheBase.RemoveByPrefix(string.Format(ModelCacheEventConst.MANUFACTURER_HAS_FEATURED_PRODUCTS_MODEL_KEY, eventMessage.Entity.ManufacturerId));
         }
     }
 }

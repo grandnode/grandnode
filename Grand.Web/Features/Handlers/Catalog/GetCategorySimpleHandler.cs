@@ -19,7 +19,7 @@ namespace Grand.Web.Features.Handlers.Catalog
 {
     public class GetCategorySimpleHandler : IRequestHandler<GetCategorySimple, IList<CategorySimpleModel>>
     {
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly ICategoryService _categoryService;
         private readonly IPictureService _pictureService;
         private readonly IProductService _productService;
@@ -28,7 +28,7 @@ namespace Grand.Web.Features.Handlers.Catalog
         private readonly CatalogSettings _catalogSettings;
 
         public GetCategorySimpleHandler(
-            ICacheManager cacheManager, 
+            ICacheBase cacheManager, 
             ICategoryService categoryService, 
             IPictureService pictureService, 
             IProductService productService, 
@@ -36,7 +36,7 @@ namespace Grand.Web.Features.Handlers.Catalog
             MediaSettings mediaSettings, 
             CatalogSettings catalogSettings)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _categoryService = categoryService;
             _pictureService = pictureService;
             _productService = productService;
@@ -56,7 +56,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                 request.Language.Id,
                 string.Join(",", request.Customer.GetCustomerRoleIds()),
                 request.Store.Id);
-            return await _cacheManager.GetAsync(cacheKey, () => PrepareCategorySimpleModels(request, ""));
+            return await _cacheBase.GetAsync(cacheKey, () => PrepareCategorySimpleModels(request, ""));
         }
 
         private async Task<List<CategorySimpleModel>> PrepareCategorySimpleModels(GetCategorySimple request, string rootCategoryId,

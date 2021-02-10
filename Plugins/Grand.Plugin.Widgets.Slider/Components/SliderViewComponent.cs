@@ -21,7 +21,7 @@ namespace Grand.Plugin.Widgets.Slider.ViewComponents
 
         public SliderViewComponent(
             IPictureService pictureService,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             ISliderService sliderService,
             IWorkContext workContext)
         {

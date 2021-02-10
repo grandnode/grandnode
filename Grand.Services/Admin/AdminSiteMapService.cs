@@ -12,19 +12,19 @@ namespace Grand.Services.Admin
     public class AdminSiteMapService : IAdminSiteMapService
     {
         private readonly IRepository<AdminSiteMap> _adminSiteMapRepository;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
         public AdminSiteMapService(
             IRepository<AdminSiteMap> adminSiteMapRepository,
-            ICacheManager cacheManager)
+            ICacheBase cacheManager)
         {
             _adminSiteMapRepository = adminSiteMapRepository;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
         }
 
         public virtual async Task<IList<AdminSiteMap>> GetSiteMap()
         {
-            return await _cacheManager.GetAsync($"ADMIN_SITEMAP", async () =>
+            return await _cacheBase.GetAsync($"ADMIN_SITEMAP", async () =>
             {
                 var query = from c in _adminSiteMapRepository.Table
                             select c;

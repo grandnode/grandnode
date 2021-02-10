@@ -34,7 +34,7 @@ namespace Grand.Services.Localization
         private readonly IRepository<LocaleStringResource> _lsrRepository;
         private readonly IWorkContext _workContext;
         private readonly ILogger _logger;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly LocalizationSettings _localizationSettings;
         private readonly IMediator _mediator;
 
@@ -51,12 +51,12 @@ namespace Grand.Services.Localization
         /// <param name="lsrRepository">Locale string resource repository</param>
         /// <param name="localizationSettings">Localization settings</param>
         /// <param name="mediator">Mediator</param>
-        public LocalizationService(ICacheManager cacheManager,
+        public LocalizationService(ICacheBase cacheManager,
             ILogger logger, IWorkContext workContext,
             IRepository<LocaleStringResource> lsrRepository,
             LocalizationSettings localizationSettings, IMediator mediator)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _logger = logger;
             _workContext = workContext;
             _lsrRepository = lsrRepository;
@@ -80,7 +80,7 @@ namespace Grand.Services.Localization
             await _lsrRepository.DeleteAsync(localeStringResource);
 
             //cache
-            await _cacheManager.RemoveByPrefix(CacheKey.LOCALSTRINGRESOURCES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.LOCALSTRINGRESOURCES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(localeStringResource);
@@ -141,7 +141,7 @@ namespace Grand.Services.Localization
             await _lsrRepository.InsertAsync(localeStringResource);
 
             //cache
-            await _cacheManager.RemoveByPrefix(CacheKey.LOCALSTRINGRESOURCES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.LOCALSTRINGRESOURCES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(localeStringResource);
@@ -160,7 +160,7 @@ namespace Grand.Services.Localization
             await _lsrRepository.UpdateAsync(localeStringResource);
 
             //cache
-            await _cacheManager.RemoveByPrefix(CacheKey.LOCALSTRINGRESOURCES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.LOCALSTRINGRESOURCES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(localeStringResource);
@@ -206,7 +206,7 @@ namespace Grand.Services.Localization
                 else
                 {
                     string key = string.Format(CacheKey.LOCALSTRINGRESOURCES_ALL_KEY, languageId);
-                    _alllocaleStringResource = _cacheManager.Get(key, () =>
+                    _alllocaleStringResource = _cacheBase.Get(key, () =>
                     {
                         var dictionary = new Dictionary<string, LocaleStringResource>();
                         var locales = GetAllResources(languageId);
@@ -230,7 +230,7 @@ namespace Grand.Services.Localization
             {
                 //gradual loading
                 string key = string.Format(CacheKey.LOCALSTRINGRESOURCES_BY_RESOURCENAME_KEY, languageId, resourceKey);
-                string lsr = _cacheManager.Get(key, () =>
+                string lsr = _cacheBase.Get(key, () =>
                 {
                     var builder = Builders<LocaleStringResource>.Filter;
                     var filter = builder.Eq(x => x.LanguageId, languageId);
@@ -357,7 +357,7 @@ namespace Grand.Services.Localization
 
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(CacheKey.LOCALSTRINGRESOURCES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.LOCALSTRINGRESOURCES_PATTERN_KEY);
         }
 
         /// <summary>
@@ -401,7 +401,7 @@ namespace Grand.Services.Localization
             await _lsrRepository.InsertManyAsync(localeStringResources);
 
             //clear cache
-            await _cacheManager.RemoveByPrefix(CacheKey.LOCALSTRINGRESOURCES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.LOCALSTRINGRESOURCES_PATTERN_KEY);
         }
 
         #endregion

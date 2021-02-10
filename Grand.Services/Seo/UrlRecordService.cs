@@ -22,7 +22,7 @@ namespace Grand.Services.Seo
         #region Fields
 
         private readonly IRepository<UrlRecord> _urlRecordRepository;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly GrandConfig _config;
 
         #endregion
@@ -35,11 +35,11 @@ namespace Grand.Services.Seo
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="urlRecordRepository">URL record repository</param>
         /// <param name="localizationSettings">Localization settings</param>
-        public UrlRecordService(ICacheManager cacheManager,
+        public UrlRecordService(ICacheBase cacheManager,
             IRepository<UrlRecord> urlRecordRepository,
             GrandConfig config)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _urlRecordRepository = urlRecordRepository;
             _config = config;
         }
@@ -72,7 +72,7 @@ namespace Grand.Services.Seo
         {
             //cache
             string key = string.Format(CacheKey.URLRECORD_ALL_KEY);
-            return await _cacheManager.GetAsync(key, async () =>
+            return await _cacheBase.GetAsync(key, async () =>
             {
                 var query = _urlRecordRepository.Table;
                 var urlRecords = await query.ToListAsync();
@@ -117,7 +117,7 @@ namespace Grand.Services.Seo
             await _urlRecordRepository.DeleteAsync(urlRecord);
 
             //cache
-            await _cacheManager.RemoveByPrefix(CacheKey.URLRECORD_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.URLRECORD_PATTERN_KEY);
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace Grand.Services.Seo
             await _urlRecordRepository.InsertAsync(urlRecord);
 
             //cache
-            await _cacheManager.RemoveByPrefix(CacheKey.URLRECORD_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.URLRECORD_PATTERN_KEY);
         }
 
         /// <summary>
@@ -157,7 +157,7 @@ namespace Grand.Services.Seo
             await _urlRecordRepository.UpdateAsync(urlRecord);
 
             //cache
-            await _cacheManager.RemoveByPrefix(CacheKey.URLRECORD_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.URLRECORD_PATTERN_KEY);
         }
 
         /// <summary>
@@ -207,7 +207,7 @@ namespace Grand.Services.Seo
 
             //gradual loading
             string key = string.Format(CacheKey.URLRECORD_BY_SLUG_KEY, slug);
-            return await _cacheManager.GetAsync(key, async () =>
+            return await _cacheBase.GetAsync(key, async () =>
             {
                 var urlRecord = await GetBySlug(slug);
                 if (urlRecord == null)
@@ -253,7 +253,7 @@ namespace Grand.Services.Seo
             if (_config.LoadAllUrlRecordsOnStartup)
             {
                 string key = string.Format(CacheKey.URLRECORD_ACTIVE_BY_ID_NAME_LANGUAGE_KEY, entityId, entityName, languageId);
-                return await _cacheManager.GetAsync(key, async () =>
+                return await _cacheBase.GetAsync(key, async () =>
                 {
                     //load all records (we know they are cached)
                     var source = await GetAllUrlRecordsCached();
@@ -274,7 +274,7 @@ namespace Grand.Services.Seo
             {
                 //gradual loading
                 string key = string.Format(CacheKey.URLRECORD_ACTIVE_BY_ID_NAME_LANGUAGE_KEY, entityId, entityName, languageId);
-                return await _cacheManager.GetAsync(key, async () =>
+                return await _cacheBase.GetAsync(key, async () =>
                 {
 
                     var source = _urlRecordRepository.Table;

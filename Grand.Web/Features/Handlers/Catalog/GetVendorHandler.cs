@@ -29,7 +29,7 @@ namespace Grand.Web.Features.Handlers.Catalog
         private readonly ILocalizationService _localizationService;
         private readonly ISpecificationAttributeService _specificationAttributeService;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IWebHelper _webHelper;
 
         private readonly VendorSettings _vendorSettings;
@@ -44,7 +44,7 @@ namespace Grand.Web.Features.Handlers.Catalog
             MediaSettings mediaSettings,
             ISpecificationAttributeService specificationAttributeService,
             IHttpContextAccessor httpContextAccessor,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IWebHelper webHelper,
             CatalogSettings catalogSettings)
         {
@@ -55,7 +55,7 @@ namespace Grand.Web.Features.Handlers.Catalog
             _mediaSettings = mediaSettings;
             _specificationAttributeService = specificationAttributeService;
             _httpContextAccessor = httpContextAccessor;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _webHelper = webHelper;
             _catalogSettings = catalogSettings;
         }
@@ -127,7 +127,7 @@ namespace Grand.Web.Features.Handlers.Catalog
             //specs
             await model.PagingFilteringContext.SpecificationFilter.PrepareSpecsFilters(alreadyFilteredSpecOptionIds,
                 products.filterableSpecificationAttributeOptionIds,
-                _specificationAttributeService, _webHelper, _cacheManager, request.Language.Id);
+                _specificationAttributeService, _webHelper, _cacheBase, request.Language.Id);
 
             return model;
         }

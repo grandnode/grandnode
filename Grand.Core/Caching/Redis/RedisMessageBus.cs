@@ -68,7 +68,7 @@ namespace Grand.Core.Caching.Redis
         {
             using (var scope = _serviceProvider.CreateScope())
             {
-                var cache = scope.ServiceProvider.GetRequiredService<ICacheManager>();
+                var cache = scope.ServiceProvider.GetRequiredService<ICacheBase>();
                 switch (message.MessageType)
                 {
                     case (int)MessageEventType.RemoveKey:

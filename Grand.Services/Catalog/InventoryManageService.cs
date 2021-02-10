@@ -23,7 +23,7 @@ namespace Grand.Services.Catalog
         private readonly IRepository<Product> _productRepository;
         private readonly IProductAttributeService _productAttributeService;
         private readonly IProductAttributeParser _productAttributeParser;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IMediator _mediator;
         private readonly CatalogSettings _catalogSettings;
 
@@ -35,14 +35,14 @@ namespace Grand.Services.Catalog
             IRepository<Product> productRepository,
             IProductAttributeService productAttributeService,
             IProductAttributeParser productAttributeParser,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IMediator mediator,
             CatalogSettings catalogSettings)
         {
             _productRepository = productRepository;
             _productAttributeService = productAttributeService;
             _productAttributeParser = productAttributeParser;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _mediator = mediator;
             _catalogSettings = catalogSettings;
         }
@@ -106,7 +106,7 @@ namespace Grand.Services.Catalog
                                     .CurrentDate("UpdatedOnUtc");
                             await _productRepository.Collection.UpdateOneAsync(filter, update);
                             //cache
-                            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
+                            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
 
                             //event notification
                             await _mediator.EntityUpdated(product);
@@ -121,9 +121,9 @@ namespace Grand.Services.Catalog
                             await _productRepository.Collection.UpdateOneAsync(filter2, update2);
 
                             //cache
-                            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
+                            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
                             if (product.ShowOnHomePage)
-                                await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_SHOWONHOMEPAGE);
+                                await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTS_SHOWONHOMEPAGE);
 
                             //event notification
                             await _mediator.EntityUpdated(product);
@@ -149,7 +149,7 @@ namespace Grand.Services.Catalog
                                         .CurrentDate("UpdatedOnUtc");
                                 await _productRepository.Collection.UpdateOneAsync(filter, update);
                                 //cache
-                                await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
+                                await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
                                 break;
                             case LowStockActivity.Unpublish:
                                 product.Published = false;
@@ -160,9 +160,9 @@ namespace Grand.Services.Catalog
                                 await _productRepository.Collection.UpdateOneAsync(filter2, update2);
 
                                 //cache
-                                await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
+                                await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
                                 if (product.ShowOnHomePage)
-                                    await _cacheManager.RemoveByPrefix(CacheKey.PRODUCTS_SHOWONHOMEPAGE);
+                                    await _cacheBase.RemoveByPrefix(CacheKey.PRODUCTS_SHOWONHOMEPAGE);
 
                                 break;
                             default:
@@ -298,7 +298,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
 
             //event notification
             await _mediator.EntityUpdated(product);
@@ -367,7 +367,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
 
             //event notification
             await _mediator.EntityUpdated(product);
@@ -422,7 +422,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
 
             //event notification
             await _mediator.EntityUpdated(product);
@@ -481,7 +481,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateManyAsync(filter, update);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
 
             //event notification
             await _mediator.EntityUpdated(product);
@@ -576,7 +576,7 @@ namespace Grand.Services.Catalog
             }
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
 
             //event notification
             await _mediator.EntityUpdated(product);
@@ -675,7 +675,7 @@ namespace Grand.Services.Catalog
                 }
             }
             //cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
 
             //event notification
             await _mediator.EntityUpdated(product);
@@ -697,7 +697,7 @@ namespace Grand.Services.Catalog
             await _productRepository.Collection.UpdateOneAsync(filter, update);
 
             //cache
-            await _cacheManager.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
+            await _cacheBase.RemoveAsync(string.Format(CacheKey.PRODUCTS_BY_ID_KEY, product.Id));
 
             //event notification
             if (mediator)

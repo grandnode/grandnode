@@ -21,7 +21,7 @@ namespace Grand.Services.Tests.Catalog
     [TestClass()]
     public class CategoryServiceTests
     {
-        private Mock<ICacheManager> _casheManagerMock;
+        private Mock<ICacheBase> _casheManagerMock;
         private Mock<IRepository<Category>> _categoryRepositoryMock;
         private Mock<IRepository<Product>> _productRepositoryMock;
         private Mock<IWorkContext> _workContextMock;
@@ -35,7 +35,7 @@ namespace Grand.Services.Tests.Catalog
         [TestInitialize()]
         public void Init()
         {
-            _casheManagerMock = new Mock<ICacheManager>();
+            _casheManagerMock = new Mock<ICacheBase>();
             _categoryRepositoryMock = new Mock<IRepository<Category>>();
             _productRepositoryMock = new Mock<IRepository<Product>>();
             _workContextMock = new Mock<IWorkContext>();

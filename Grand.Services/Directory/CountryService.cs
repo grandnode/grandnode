@@ -29,7 +29,7 @@ namespace Grand.Services.Directory
         private readonly IStoreContext _storeContext;
         private readonly CatalogSettings _catalogSettings;
         private readonly IMediator _mediator;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
         #endregion
 
@@ -43,13 +43,13 @@ namespace Grand.Services.Directory
         /// <param name="storeContext">Store context</param>
         /// <param name="catalogSettings">Catalog settings</param>
         /// <param name="mediator">Mediator</param>
-        public CountryService(ICacheManager cacheManager,
+        public CountryService(ICacheBase cacheManager,
             IRepository<Country> countryRepository,
             IStoreContext storeContext,
             CatalogSettings catalogSettings,
             IMediator mediator)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _countryRepository = countryRepository;
             _storeContext = storeContext;
             _catalogSettings = catalogSettings;
@@ -71,7 +71,7 @@ namespace Grand.Services.Directory
 
             await _countryRepository.DeleteAsync(country);
 
-            await _cacheManager.RemoveByPrefix(CacheKey.COUNTRIES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.COUNTRIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(country);
@@ -87,7 +87,7 @@ namespace Grand.Services.Directory
         {
             string key = string.Format(CacheKey.COUNTRIES_ALL_KEY, languageId, showHidden);
 
-            return await _cacheManager.GetAsync(key, async () =>
+            return await _cacheBase.GetAsync(key, async () =>
             {
                 var builder = Builders<Country>.Filter;
                 var filter = builder.Empty;
@@ -149,7 +149,7 @@ namespace Grand.Services.Directory
                 return null;
 
             var key = string.Format(CacheKey.COUNTRIES_BY_KEY, countryId);
-            return await _cacheManager.GetAsync(key, () => _countryRepository.GetByIdAsync(countryId));
+            return await _cacheBase.GetAsync(key, () => _countryRepository.GetByIdAsync(countryId));
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace Grand.Services.Directory
         public virtual Task<Country> GetCountryByTwoLetterIsoCode(string twoLetterIsoCode)
         {
             var key = string.Format(CacheKey.COUNTRIES_BY_TWOLETTER, twoLetterIsoCode);
-            return _cacheManager.GetAsync(key, () =>
+            return _cacheBase.GetAsync(key, () =>
             {
                 var filter = Builders<Country>.Filter.Eq(x => x.TwoLetterIsoCode, twoLetterIsoCode);
                 return _countryRepository.Collection.Find(filter).FirstOrDefaultAsync();
@@ -200,7 +200,7 @@ namespace Grand.Services.Directory
         public virtual Task<Country> GetCountryByThreeLetterIsoCode(string threeLetterIsoCode)
         {
             var key = string.Format(CacheKey.COUNTRIES_BY_THREELETTER, threeLetterIsoCode);
-            return _cacheManager.GetAsync(key, () =>
+            return _cacheBase.GetAsync(key, () =>
             {
                 var filter = Builders<Country>.Filter.Eq(x => x.ThreeLetterIsoCode, threeLetterIsoCode);
                 return _countryRepository.Collection.Find(filter).FirstOrDefaultAsync();
@@ -218,7 +218,7 @@ namespace Grand.Services.Directory
 
             await _countryRepository.InsertAsync(country);
 
-            await _cacheManager.RemoveByPrefix(CacheKey.COUNTRIES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.COUNTRIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(country);
@@ -235,7 +235,7 @@ namespace Grand.Services.Directory
 
             await _countryRepository.UpdateAsync(country);
 
-            await _cacheManager.RemoveByPrefix(CacheKey.COUNTRIES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.COUNTRIES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(country);

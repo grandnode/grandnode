@@ -38,7 +38,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
         private readonly IPriceCalculationService _priceCalculationService;
         private readonly IAclService _aclService;
         private readonly IPriceFormatter _priceFormatter;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IPictureService _pictureService;
 
         private readonly ShoppingCartSettings _shoppingCartSettings;
@@ -56,7 +56,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             IPriceCalculationService priceCalculationService,
             IAclService aclService,
             IPriceFormatter priceFormatter,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IPictureService pictureService,
             ShoppingCartSettings shoppingCartSettings,
             CatalogSettings catalogSettings,
@@ -72,7 +72,7 @@ namespace Grand.Web.Features.Handlers.ShoppingCart
             _priceCalculationService = priceCalculationService;
             _aclService = aclService;
             _priceFormatter = priceFormatter;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _pictureService = pictureService;
             _shoppingCartSettings = shoppingCartSettings;
             _catalogSettings = catalogSettings;

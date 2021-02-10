@@ -68,11 +68,11 @@ namespace Grand.Services.Tests.Knowledgebase
             var permissionService = new Mock<IPermissionService>();
             _permissionService = permissionService.Object;
 
-            var _cacheManager = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object, _eventPublisher);
+            var _cacheBase = new TestMemoryCacheManager(new Mock<IMemoryCache>().Object, _eventPublisher);
 
 
             _knowledgebaseService = new KnowledgebaseService(_categoryRepository, _articleRepository, _articleCommentRepository, _eventPublisher,
-                _workContext, _cacheManager, _storeContext, _commonSettings, _catalogSettings);
+                _workContext, _cacheBase, _storeContext, _commonSettings, _catalogSettings);
         }
 
         [TestMethod()]

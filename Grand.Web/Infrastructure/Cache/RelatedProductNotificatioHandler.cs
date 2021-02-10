@@ -13,28 +13,28 @@ namespace Grand.Web.Infrastructure.Cache
         INotificationHandler<EntityDeleted<RelatedProduct>>
     {
 
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
-        public RelatedProductNotificatioHandler(ICacheManager cacheManager)
+        public RelatedProductNotificatioHandler(ICacheBase cacheManager)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
         }
 
         public async Task Handle(EntityInserted<RelatedProduct> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.ProductId1));
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.ProductId2));
+            await _cacheBase.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.ProductId1));
+            await _cacheBase.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.ProductId2));
 
         }
         public async Task Handle(EntityUpdated<RelatedProduct> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.ProductId1));
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.ProductId2));
+            await _cacheBase.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.ProductId1));
+            await _cacheBase.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.ProductId2));
         }
         public async Task Handle(EntityDeleted<RelatedProduct> eventMessage, CancellationToken cancellationToken)
         {
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.ProductId1));
-            await _cacheManager.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.ProductId2));
+            await _cacheBase.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.ProductId1));
+            await _cacheBase.RemoveByPrefix(string.Format(ModelCacheEventConst.PRODUCTS_RELATED_IDS_PATTERN_KEY, eventMessage.Entity.ProductId2));
         }
     }
 }

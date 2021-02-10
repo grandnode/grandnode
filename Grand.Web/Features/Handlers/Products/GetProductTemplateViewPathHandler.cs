@@ -12,12 +12,12 @@ namespace Grand.Web.Features.Handlers.Products
 {
     public class GetProductTemplateViewPathHandler : IRequestHandler<GetProductTemplateViewPath, string>
     {
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IProductTemplateService _productTemplateService;
 
-        public GetProductTemplateViewPathHandler(ICacheManager cacheManager, IProductTemplateService productTemplateService)
+        public GetProductTemplateViewPathHandler(ICacheBase cacheManager, IProductTemplateService productTemplateService)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _productTemplateService = productTemplateService;
         }
 
@@ -27,7 +27,7 @@ namespace Grand.Web.Features.Handlers.Products
                 throw new ArgumentNullException("ProductTemplateId");
 
             var templateCacheKey = string.Format(ModelCacheEventConst.PRODUCT_TEMPLATE_MODEL_KEY, request.ProductTemplateId);
-            var productTemplateViewPath = await _cacheManager.GetAsync(templateCacheKey, async () =>
+            var productTemplateViewPath = await _cacheBase.GetAsync(templateCacheKey, async () =>
             {
                 var template = await _productTemplateService.GetProductTemplateById(request.ProductTemplateId);
                 if (template == null)

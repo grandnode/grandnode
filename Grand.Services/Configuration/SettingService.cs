@@ -26,7 +26,7 @@ namespace Grand.Services.Configuration
 
         private readonly IRepository<Setting> _settingRepository;
         private readonly IMediator _mediator;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
         private IDictionary<string, IList<SettingForCaching>> _allSettings = null;
 
@@ -40,10 +40,10 @@ namespace Grand.Services.Configuration
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="mediator">Mediator</param>
         /// <param name="settingRepository">Setting repository</param>
-        public SettingService(ICacheManager cacheManager, IMediator mediator,
+        public SettingService(ICacheBase cacheManager, IMediator mediator,
             IRepository<Setting> settingRepository)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _mediator = mediator;
             _settingRepository = settingRepository;
         }
@@ -76,7 +76,7 @@ namespace Grand.Services.Configuration
 
             //cache
             string key = string.Format(CacheKey.SETTINGS_ALL_KEY);
-            _allSettings = _cacheManager.Get(key, () =>
+            _allSettings = _cacheBase.Get(key, () =>
             {
                 //we use no tracking here for performance optimization
                 //anyway records are loaded only for read-only operations
@@ -132,7 +132,7 @@ namespace Grand.Services.Configuration
 
             //cache
             if (clearCache)
-                await _cacheManager.Clear();
+                await _cacheBase.Clear();
 
         }
 
@@ -150,7 +150,7 @@ namespace Grand.Services.Configuration
 
             //cache
             if (clearCache)
-                await _cacheManager.Clear();
+                await _cacheBase.Clear();
 
         }
 
@@ -166,7 +166,7 @@ namespace Grand.Services.Configuration
             await _settingRepository.DeleteAsync(setting);
 
             //cache
-            await _cacheManager.Clear();
+            await _cacheBase.Clear();
 
         }
 
@@ -475,7 +475,7 @@ namespace Grand.Services.Configuration
         /// </summary>
         public virtual async Task ClearCache()
         {
-            await _cacheManager.RemoveByPrefix(CacheKey.SETTINGS_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.SETTINGS_PATTERN_KEY);
         }
 
         #endregion

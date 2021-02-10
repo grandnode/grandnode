@@ -21,7 +21,7 @@ namespace Grand.Services.Localization
         #region Fields
 
         private readonly IRepository<Language> _languageRepository;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IMediator _mediator;
 
         #endregion
@@ -34,11 +34,11 @@ namespace Grand.Services.Localization
         /// <param name="cacheManager">Cache manager</param>
         /// <param name="languageRepository">Language repository</param>
         /// <param name="mediator">Mediator</param>
-        public LanguageService(ICacheManager cacheManager,
+        public LanguageService(ICacheBase cacheManager,
             IRepository<Language> languageRepository,
             IMediator mediator)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _languageRepository = languageRepository;
             _mediator = mediator;
         }
@@ -59,7 +59,7 @@ namespace Grand.Services.Localization
             await _languageRepository.DeleteAsync(language);
 
             //cache
-            await _cacheManager.RemoveByPrefix(CacheKey.LANGUAGES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.LANGUAGES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityDeleted(language);
@@ -74,7 +74,7 @@ namespace Grand.Services.Localization
         public virtual async Task<IList<Language>> GetAllLanguages(bool showHidden = false, string storeId = "")
         {
             string key = string.Format(CacheKey.LANGUAGES_ALL_KEY, showHidden);
-            var languages = await _cacheManager.GetAsync(key, () =>
+            var languages = await _cacheBase.GetAsync(key, () =>
             {
                 var query = _languageRepository.Table;
 
@@ -102,7 +102,7 @@ namespace Grand.Services.Localization
         public virtual Task<Language> GetLanguageById(string languageId)
         {
             string key = string.Format(CacheKey.LANGUAGES_BY_ID_KEY, languageId);
-            return _cacheManager.GetAsync(key, () => _languageRepository.GetByIdAsync(languageId));
+            return _cacheBase.GetAsync(key, () => _languageRepository.GetByIdAsync(languageId));
         }
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace Grand.Services.Localization
             await _languageRepository.InsertAsync(language);
 
             //cache
-            await _cacheManager.RemoveByPrefix(CacheKey.LANGUAGES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.LANGUAGES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityInserted(language);
@@ -136,7 +136,7 @@ namespace Grand.Services.Localization
             await _languageRepository.UpdateAsync(language);
 
             //cache
-            await _cacheManager.RemoveByPrefix(CacheKey.LANGUAGES_PATTERN_KEY);
+            await _cacheBase.RemoveByPrefix(CacheKey.LANGUAGES_PATTERN_KEY);
 
             //event notification
             await _mediator.EntityUpdated(language);

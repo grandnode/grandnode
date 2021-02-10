@@ -20,7 +20,7 @@ namespace Grand.Web.Features.Handlers.News
 {
     public class GetNewsItemListHandler : IRequestHandler<GetNewsItemList, NewsItemListModel>
     {
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IWorkContext _workContext;
         private readonly IStoreContext _storeContext;
         private readonly INewsService _newsService;
@@ -32,11 +32,11 @@ namespace Grand.Web.Features.Handlers.News
         private readonly NewsSettings _newsSettings;
         private readonly MediaSettings _mediaSettings;
 
-        public GetNewsItemListHandler(ICacheManager cacheManager, IWorkContext workContext, IStoreContext storeContext,
+        public GetNewsItemListHandler(ICacheBase cacheManager, IWorkContext workContext, IStoreContext storeContext,
             INewsService newsService, IDateTimeHelper dateTimeHelper, IPictureService pictureService, IWebHelper webHelper,
             ILocalizationService localizationService, NewsSettings newsSettings, MediaSettings mediaSettings)
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _workContext = workContext;
             _storeContext = storeContext;
             _newsService = newsService;
@@ -84,7 +84,7 @@ namespace Grand.Web.Features.Handlers.News
                 var pictureSize = _mediaSettings.NewsListThumbPictureSize;
                 var categoryPictureCacheKey = string.Format(ModelCacheEventConst.NEWS_PICTURE_MODEL_KEY, newsItem.Id, pictureSize, true,
                     _workContext.WorkingLanguage.Id, _storeContext.CurrentStore.Id);
-                model.PictureModel = await _cacheManager.GetAsync(categoryPictureCacheKey, async () =>
+                model.PictureModel = await _cacheBase.GetAsync(categoryPictureCacheKey, async () =>
                 {
                     var pictureModel = new PictureModel {
                         Id = newsItem.PictureId,

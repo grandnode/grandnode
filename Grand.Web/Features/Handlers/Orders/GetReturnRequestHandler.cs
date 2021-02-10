@@ -26,7 +26,7 @@ namespace Grand.Web.Features.Handlers.Orders
 {
     public class GetReturnRequestHandler : IRequestHandler<GetReturnRequest, ReturnRequestModel>
     {
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IWorkContext _workContext;
         private readonly IReturnRequestService _returnRequestService;
         private readonly IShipmentService _shipmentService;
@@ -40,7 +40,7 @@ namespace Grand.Web.Features.Handlers.Orders
         private readonly OrderSettings _orderSettings;
 
         public GetReturnRequestHandler(
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IWorkContext workContext,
             IReturnRequestService returnRequestService,
             IShipmentService shipmentService,
@@ -54,7 +54,7 @@ namespace Grand.Web.Features.Handlers.Orders
             OrderSettings orderSettings
             )
         {
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _workContext = workContext;
             _returnRequestService = returnRequestService;
             _shipmentService = shipmentService;
@@ -97,7 +97,7 @@ namespace Grand.Web.Features.Handlers.Orders
 
         private async Task<IList<ReturnRequestModel.ReturnRequestReasonModel>> PrepareAvailableReturnReasons()
         {
-            return await _cacheManager.GetAsync(string.Format(ModelCacheEventConst.RETURNREQUESTREASONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
+            return await _cacheBase.GetAsync(string.Format(ModelCacheEventConst.RETURNREQUESTREASONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
                 async () =>
                 {
                     var reasons = new List<ReturnRequestModel.ReturnRequestReasonModel>();
@@ -112,7 +112,7 @@ namespace Grand.Web.Features.Handlers.Orders
 
         private async Task<IList<ReturnRequestModel.ReturnRequestActionModel>> PrepareAvailableReturnActions()
         {
-            return await _cacheManager.GetAsync(string.Format(ModelCacheEventConst.RETURNREQUESTACTIONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
+            return await _cacheBase.GetAsync(string.Format(ModelCacheEventConst.RETURNREQUESTACTIONS_MODEL_KEY, _workContext.WorkingLanguage.Id),
                 async () =>
                 {
                     var actions = new List<ReturnRequestModel.ReturnRequestActionModel>();

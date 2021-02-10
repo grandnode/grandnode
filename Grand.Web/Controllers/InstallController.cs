@@ -29,18 +29,18 @@ namespace Grand.Web.Controllers
         #region Fields
 
         private readonly GrandConfig _config;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IServiceProvider _serviceProvider;
         private readonly IMediator _mediator;
         #endregion
 
         #region Ctor
 
-        public InstallController(GrandConfig config, ICacheManager cacheManager,
+        public InstallController(GrandConfig config, ICacheBase cacheManager,
             IServiceProvider serviceProvider, IMediator mediator)
         {
             _config = config;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _serviceProvider = serviceProvider;
             _mediator = mediator;
         }
@@ -56,7 +56,7 @@ namespace Grand.Web.Controllers
 
             var locService = _serviceProvider.GetRequiredService<IInstallationLocalizationService>();
 
-            var installed = await _cacheManager.GetAsync("Installed", async () => { return await Task.FromResult(false); });
+            var installed = await _cacheBase.GetAsync("Installed", async () => { return await Task.FromResult(false); });
             if (installed)
                 return View(new InstallModel() { Installed = true });
 
@@ -222,14 +222,14 @@ namespace Grand.Web.Controllers
                     }
 
                     //restart application
-                    await _cacheManager.SetAsync("Installed", true, 120);
+                    await _cacheBase.SetAsync("Installed", true, 120);
                     return View(new InstallModel() { Installed = true });
                 }
                 catch (Exception exception)
                 {
                     //reset cache
                     DataSettingsHelper.ResetCache();
-                    await _cacheManager.Clear();
+                    await _cacheBase.Clear();
 
                     System.IO.File.Delete(CommonHelper.MapPath("~/App_Data/Settings.txt"));
 

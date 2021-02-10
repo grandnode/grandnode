@@ -26,7 +26,7 @@ namespace Grand.Web.Features.Handlers.Catalog
     {
         private readonly IMediator _mediator;
         private readonly IManufacturerService _manufacturerService;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IPictureService _pictureService;
         private readonly ILocalizationService _localizationService;
         private readonly MediaSettings _mediaSettings;
@@ -35,7 +35,7 @@ namespace Grand.Web.Features.Handlers.Catalog
         public GetManufacturerFeaturedProductsHandler(
             IMediator mediator,
             IManufacturerService manufacturerService,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IPictureService pictureService,
             ILocalizationService localizationService,
             MediaSettings mediaSettings,
@@ -43,7 +43,7 @@ namespace Grand.Web.Features.Handlers.Catalog
         {
             _mediator = mediator;
             _manufacturerService = manufacturerService;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _pictureService = pictureService;
             _localizationService = localizationService;
             _mediaSettings = mediaSettings;
@@ -56,7 +56,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                             string.Join(",", request.Customer.GetCustomerRoleIds()), request.Store.Id,
                             request.Language.Id);
 
-            var model = await _cacheManager.GetAsync(manufCacheKey, async () =>
+            var model = await _cacheBase.GetAsync(manufCacheKey, async () =>
             {
                 var manufList = new List<ManufacturerModel>();
                 var manufmodel = await _manufacturerService.GetAllManufacturerFeaturedProductsOnHomePage();
@@ -86,7 +86,7 @@ namespace Grand.Web.Features.Handlers.Catalog
                     string.Join(",", request.Customer.GetCustomerRoleIds()),
                     request.Store.Id);
 
-                var hasFeaturedProductsCache = await _cacheManager.GetAsync<bool?>(cacheKey, async () =>
+                var hasFeaturedProductsCache = await _cacheBase.GetAsync<bool?>(cacheKey, async () =>
                 {
                     featuredProducts = (await _mediator.Send(new GetSearchProductsQuery() {
                         PageSize = _catalogSettings.LimitOfFeaturedProducts,

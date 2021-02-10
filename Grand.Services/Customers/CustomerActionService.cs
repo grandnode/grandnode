@@ -22,7 +22,7 @@ namespace Grand.Services.Customers
         private readonly IRepository<CustomerActionType> _customerActionTypeRepository;
         private readonly IRepository<CustomerActionHistory> _customerActionHistoryRepository;
         private readonly IMediator _mediator;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
 
         #endregion
 
@@ -32,13 +32,13 @@ namespace Grand.Services.Customers
             IRepository<CustomerActionType> customerActionTypeRepository,
             IRepository<CustomerActionHistory> customerActionHistoryRepository,
             IMediator mediator,
-            ICacheManager cacheManager)
+            ICacheBase cacheManager)
         {
             _customerActionRepository = customerActionRepository;
             _customerActionTypeRepository = customerActionTypeRepository;
             _customerActionHistoryRepository = customerActionHistoryRepository;
             _mediator = mediator;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
         }
 
         #endregion
@@ -144,7 +144,7 @@ namespace Grand.Services.Customers
             await _customerActionTypeRepository.UpdateAsync(customerActionType);
 
             //clear cache
-            await _cacheManager.RemoveAsync(CacheKey.CUSTOMER_ACTION_TYPE);
+            await _cacheBase.RemoveAsync(CacheKey.CUSTOMER_ACTION_TYPE);
             //event notification
             await _mediator.EntityUpdated(customerActionType);
         }

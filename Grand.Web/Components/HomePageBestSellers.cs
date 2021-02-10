@@ -18,7 +18,7 @@ namespace Grand.Web.Components
     {
         #region Fields
         private readonly IOrderReportService _orderReportService;
-        private readonly ICacheManager _cacheManager;
+        private readonly ICacheBase _cacheBase;
         private readonly IStoreContext _storeContext;
         private readonly IProductService _productService;
         private readonly IMediator _mediator;
@@ -30,14 +30,14 @@ namespace Grand.Web.Components
 
         public HomePageBestSellersViewComponent(
             IOrderReportService orderReportService,
-            ICacheManager cacheManager,
+            ICacheBase cacheManager,
             IStoreContext storeContext,
             IProductService productService,
             IMediator mediator,
             CatalogSettings catalogSettings)
         {
             _orderReportService = orderReportService;
-            _cacheManager = cacheManager;
+            _cacheBase = cacheManager;
             _storeContext = storeContext;
             _productService = productService;
             _mediator = mediator;
@@ -56,7 +56,7 @@ namespace Grand.Web.Components
 
             //load and cache report
             var fromdate = DateTime.UtcNow.AddMonths(_catalogSettings.PeriodBestsellers > 0 ? -_catalogSettings.PeriodBestsellers : -12);
-            var report = await _cacheManager.GetAsync(string.Format(ModelCacheEventConst.HOMEPAGE_BESTSELLERS_IDS_KEY, _storeContext.CurrentStore.Id), async () =>
+            var report = await _cacheBase.GetAsync(string.Format(ModelCacheEventConst.HOMEPAGE_BESTSELLERS_IDS_KEY, _storeContext.CurrentStore.Id), async () =>
                                 await _orderReportService.BestSellersReport(
                                     createdFromUtc: fromdate,
                                     ps: Domain.Payments.PaymentStatus.Paid,
