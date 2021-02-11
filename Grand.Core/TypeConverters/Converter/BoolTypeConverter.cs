@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Text;
 
-namespace Grand.Core.TypeConverters
+namespace Grand.Core.TypeConverters.Converter
 {
     public class BoolTypeConverter : BooleanConverter
     {

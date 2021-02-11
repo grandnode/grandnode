@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Grand.Core.Infrastructure
+namespace Grand.Core
 {
     public interface IGrandStartup
     {

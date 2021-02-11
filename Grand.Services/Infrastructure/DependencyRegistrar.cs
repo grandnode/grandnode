@@ -1,7 +1,7 @@
 using Grand.Core.Configuration;
 using Grand.Core.Data;
-using Grand.Core.Infrastructure;
 using Grand.Core.DependencyInjection;
+using Grand.Core.TypeFinders;
 using Grand.Services.Admin;
 using Grand.Services.Affiliates;
 using Grand.Services.Authentication;

@@ -1,6 +1,6 @@
 ﻿using Grand.Core.Configuration;
-using Grand.Core.Infrastructure;
 using Grand.Core.DependencyInjection;
+using Grand.Core.TypeFinders;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Grand.Plugin.ExternalAuth.Google
@@ -12,8 +12,7 @@ namespace Grand.Plugin.ExternalAuth.Google
             serviceCollection.AddScoped<GoogleAuthenticationMethod>();
         }
 
-        public int Order
-        {
+        public int Order {
             get { return 10; }
         }
     }

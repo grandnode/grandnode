@@ -1,6 +1,6 @@
 ﻿using Grand.Core.Configuration;
-using Grand.Core.Infrastructure;
 using Grand.Core.DependencyInjection;
+using Grand.Core.TypeFinders;
 using Grand.Plugin.Widgets.Slider.Domain;
 using Grand.Plugin.Widgets.Slider.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,11 +18,10 @@ namespace Grand.Plugin.Widgets.Slider
                 cm.AutoMap();
                 cm.UnmapMember(c => c.SliderType);
             });
-            serviceCollection.AddScoped<ISliderService,SliderService>();
+            serviceCollection.AddScoped<ISliderService, SliderService>();
         }
 
-        public int Order
-        {
+        public int Order {
             get { return 10; }
         }
     }

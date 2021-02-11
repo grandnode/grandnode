@@ -1,4 +1,4 @@
-﻿namespace Grand.Core.Infrastructure
+﻿namespace Grand.Core
 {
     public interface ITypeConverter
     {

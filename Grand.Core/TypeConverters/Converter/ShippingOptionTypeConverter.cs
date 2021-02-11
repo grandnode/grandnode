@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Text.Json;
 
-namespace Grand.Core.TypeConverters
+namespace Grand.Core.TypeConverters.Converter
 {
     public class ShippingOptionTypeConverter : TypeConverter
     {

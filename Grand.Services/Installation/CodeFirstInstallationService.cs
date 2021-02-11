@@ -1,6 +1,8 @@
 using Grand.Core;
+using Grand.Core.Data;
+using Grand.Core.TypeFinders;
 using Grand.Domain;
-using Grand.Domain.Data;
+using Grand.Domain.Admin;
 using Grand.Domain.AdminSearch;
 using Grand.Domain.Affiliates;
 using Grand.Domain.Blogs;
@@ -9,6 +11,7 @@ using Grand.Domain.Cms;
 using Grand.Domain.Common;
 using Grand.Domain.Configuration;
 using Grand.Domain.Customers;
+using Grand.Domain.Data;
 using Grand.Domain.Directory;
 using Grand.Domain.Discounts;
 using Grand.Domain.Knowledgebase;
@@ -28,7 +31,7 @@ using Grand.Domain.Tasks;
 using Grand.Domain.Tax;
 using Grand.Domain.Topics;
 using Grand.Domain.Vendors;
-using Grand.Core.Infrastructure;
+using Grand.Services.Admin;
 using Grand.Services.Common;
 using Grand.Services.Configuration;
 using Grand.Services.Customers;
@@ -44,9 +47,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Grand.Core.Data;
-using Grand.Domain.Admin;
-using Grand.Services.Admin;
 
 namespace Grand.Services.Installation
 {
@@ -146,7 +146,7 @@ namespace Grand.Services.Installation
         public CodeFirstInstallationService(IServiceProvider serviceProvider)
         {
             _versionRepository = serviceProvider.GetRequiredService<IRepository<GrandNodeVersion>>();
-            _adminRepository= serviceProvider.GetRequiredService<IRepository<AdminSiteMap>>();
+            _adminRepository = serviceProvider.GetRequiredService<IRepository<AdminSiteMap>>();
             _bidRepository = serviceProvider.GetRequiredService<IRepository<Bid>>();
             _addressRepository = serviceProvider.GetRequiredService<IRepository<Address>>();
             _affiliateRepository = serviceProvider.GetRequiredService<IRepository<Affiliate>>();
@@ -6885,7 +6885,7 @@ namespace Grand.Services.Installation
             #endregion
 
             #region Display
-            
+
             var productAcerProjector = new Product {
                 ProductType = ProductType.SimpleProduct,
                 VisibleIndividually = true,

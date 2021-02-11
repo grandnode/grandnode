@@ -1,9 +1,6 @@
-﻿using Grand.Core.TypeConverters;
+﻿using Grand.Core.TypeConverters.Converter;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 
 namespace Grand.Core.Tests.ComponentModel
 {

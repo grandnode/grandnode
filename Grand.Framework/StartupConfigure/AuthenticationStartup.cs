@@ -1,6 +1,6 @@
-﻿using Grand.Core.Configuration;
+﻿using Grand.Core;
+using Grand.Core.Configuration;
 using Grand.Core.Data;
-using Grand.Core.Infrastructure;
 using Grand.Framework.Infrastructure.Extensions;
 using Grand.Framework.Middleware;
 using Microsoft.AspNetCore.Builder;
@@ -55,8 +55,7 @@ namespace Grand.Framework.StartupConfigure
         /// <summary>
         /// Gets order of this startup configuration implementation
         /// </summary>
-        public int Order
-        {
+        public int Order {
             //authentication should be loaded before MVC
             get { return 500; }
         }

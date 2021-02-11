@@ -1,6 +1,6 @@
 using Grand.Core.Configuration;
-using Grand.Core.Infrastructure;
 using Grand.Core.DependencyInjection;
+using Grand.Core.TypeFinders;
 using Grand.Plugin.ExchangeRate.McExchange;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -13,8 +13,7 @@ namespace Grand.Plugin.ExchangeRate.EcbExchange
             serviceCollection.AddScoped<McExchangeRateProvider>();
         }
 
-        public int Order
-        {
+        public int Order {
             get { return 10; }
         }
     }

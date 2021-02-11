@@ -1,7 +1,7 @@
 ﻿using Grand.Core.Configuration;
-using Grand.Core.Infrastructure;
 using Grand.Core.DependencyInjection;
 using Grand.Core.Plugins;
+using Grand.Core.TypeFinders;
 using Grand.Services.Common;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,7 +14,7 @@ namespace Grand.Plugin.Widgets.FacebookPixel
             serviceCollection.AddScoped<FacebookPixelPlugin>();
             if (PluginManager.FindPlugin(GetType()).Installed)
             {
-                serviceCollection.AddScoped<IConsentCookie,FacebookPixelConsentCookie>();
+                serviceCollection.AddScoped<IConsentCookie, FacebookPixelConsentCookie>();
             }
         }
 

@@ -4,13 +4,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
-namespace Grand.Core.Infrastructure
+namespace Grand.Core.TypeFinders
 {
     /// <summary>
     /// A class that finds types needed by Grand by looping assemblies in the 
     /// currently executing AppDomain. 
     /// </summary>
-    public class AppDomainTypeFinder : ITypeFinder
+    public class TypeFinder : ITypeFinder
     {
 
         #region Methods
@@ -110,26 +110,18 @@ namespace Grand.Core.Infrastructure
         /// <returns>A list of assemblies that should be loaded by the Grand factory.</returns>
         public virtual IList<Assembly> GetAssemblies()
         {
-            var addedAssemblyNames = new List<string>();
-            var assemblies = new List<Assembly>();
-
-            AddAssembliesInAppDomain(addedAssemblyNames, assemblies);
-
-            return assemblies;
+            return AssembliesInAppDomain();
         }
 
         #endregion
 
         #region Utilities
 
-        /// <summary>
-        /// Iterates all assemblies in the AppDomain and if it's name matches the configured patterns add it to our list.
-        /// </summary>
-        /// <param name="addedAssemblyNames"></param>
-        /// <param name="assemblies"></param>
-        private void AddAssembliesInAppDomain(List<string> addedAssemblyNames, List<Assembly> assemblies)
+        private IList<Assembly> AssembliesInAppDomain()
         {
-            Assembly currentAssem = Assembly.GetExecutingAssembly();
+            var addedAssemblyNames = new List<string>();
+            var assemblies = new List<Assembly>();
+            var currentAssem = Assembly.GetExecutingAssembly();
             foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 var product = assembly.GetCustomAttribute<AssemblyProductAttribute>();
@@ -157,6 +149,8 @@ namespace Grand.Core.Infrastructure
                         }
                     }
                 }
+
+            return assemblies;
         }
 
         /// <summary>

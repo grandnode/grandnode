@@ -1,13 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 
-namespace Grand.Core.Infrastructure
+namespace Grand.Core.TypeFinders
 {
-    /// <summary>
-    /// Provides information about types in the current web application. 
-    /// Optionally this class can look at all assemblies in the bin folder.
-    /// </summary>
-    public class WebAppTypeFinder : AppDomainTypeFinder
+    public class AppTypeFinder : TypeFinder
     {
         #region Fields
 

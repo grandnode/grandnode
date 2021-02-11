@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Grand.Core.Infrastructure
+namespace Grand.Core.TypeFinders
 {
     /// <summary>
     /// Classes implementing this interface provide information about types 

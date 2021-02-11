@@ -1,5 +1,5 @@
 ﻿using Grand.Core.Configuration;
-using Grand.Core.Infrastructure;
+using Grand.Core.TypeFinders;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Grand.Core.DependencyInjection

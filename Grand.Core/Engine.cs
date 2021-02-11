@@ -12,8 +12,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
+using Grand.Core.TypeFinders;
 
-namespace Grand.Core.Infrastructure
+namespace Grand.Core
 {
     /// <summary>
     /// Represents engine
@@ -131,7 +132,7 @@ namespace Grand.Core.Infrastructure
         public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             //find startup configurations provided by other assemblies
-            var typeFinder = new WebAppTypeFinder();
+            var typeFinder = new AppTypeFinder();
             var startupConfigurations = typeFinder.FindClassesOfType<IGrandStartup>();
 
             //create and sort instances of startup configurations
@@ -167,7 +168,7 @@ namespace Grand.Core.Infrastructure
         public static void ConfigureRequestPipeline(IApplicationBuilder application, IWebHostEnvironment webHostEnvironment)
         {
             //find startup configurations provided by other assemblies
-            var typeFinder = new WebAppTypeFinder();
+            var typeFinder = new AppTypeFinder();
             var startupConfigurations = typeFinder.FindClassesOfType<IGrandStartup>();
 
             //create and sort instances of startup configurations
@@ -190,7 +191,7 @@ namespace Grand.Core.Infrastructure
         /// <param name="configuration">Configuration</param>
         public static void ConfigureContainer(IServiceCollection serviceCollection, IConfiguration configuration)
         {
-            var typeFinder = new WebAppTypeFinder();
+            var typeFinder = new AppTypeFinder();
 
             //register type finder
             serviceCollection.AddSingleton<ITypeFinder>(typeFinder);

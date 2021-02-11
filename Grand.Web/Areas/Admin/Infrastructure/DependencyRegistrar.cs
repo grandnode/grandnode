@@ -1,6 +1,6 @@
 using Grand.Core.Configuration;
-using Grand.Core.Infrastructure;
 using Grand.Core.DependencyInjection;
+using Grand.Core.TypeFinders;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,8 +48,7 @@ namespace Grand.Web.Areas.Admin.Infrastructure
             serviceCollection.AddScoped<IStoreViewModelService, StoreViewModelService>();
             serviceCollection.AddScoped<IProductViewModelService, ProductViewModelService>();
         }
-        public int Order
-        {
+        public int Order {
             get { return 3; }
         }
     }

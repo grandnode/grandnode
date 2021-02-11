@@ -1,6 +1,6 @@
 ﻿using Grand.Core.Configuration;
-using Grand.Core.Infrastructure;
 using Grand.Core.DependencyInjection;
+using Grand.Core.TypeFinders;
 using Grand.Plugin.DiscountRequirements.CustomerRoles;
 using Grand.Plugin.DiscountRequirements.HasAllProducts;
 using Grand.Plugin.DiscountRequirements.HasOneProduct;

@@ -1,7 +1,7 @@
 ﻿using Grand.Core.Configuration;
-using Grand.Core.Infrastructure;
 using Grand.Core.DependencyInjection;
 using Grand.Core.Plugins;
+using Grand.Core.TypeFinders;
 using Grand.Services.Common;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,12 +14,11 @@ namespace Grand.Plugin.Widgets.GoogleAnalytics
             serviceCollection.AddScoped<GoogleAnalyticPlugin>();
             if (PluginManager.FindPlugin(GetType()).Installed)
             {
-                serviceCollection.AddScoped<IConsentCookie,GoogleAnalyticsConsentCookie>();
+                serviceCollection.AddScoped<IConsentCookie, GoogleAnalyticsConsentCookie>();
             }
         }
 
-        public int Order
-        {
+        public int Order {
             get { return 10; }
         }
     }
