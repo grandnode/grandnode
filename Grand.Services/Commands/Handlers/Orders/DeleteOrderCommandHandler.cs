@@ -2,6 +2,7 @@
 using Grand.Services.Catalog;
 using Grand.Services.Commands.Models.Orders;
 using Grand.Services.Discounts;
+using Grand.Services.Notifications.Orders;
 using Grand.Services.Orders;
 using Grand.Services.Shipping;
 using MediatR;
@@ -66,8 +67,7 @@ namespace Grand.Services.Commands.Handlers.Orders
                 var recurringPayments = await _orderService.SearchRecurringPayments(initialOrderId: request.Order.Id);
                 foreach (var rp in recurringPayments)
                 {
-                    var errors = await _mediator.Send(new CancelRecurringPaymentCommand() { RecurringPayment = rp });
-                    //use "errors" variable?
+                    await _mediator.Send(new CancelRecurringPaymentCommand() { RecurringPayment = rp });
                 }
 
                 //Adjust inventory for already shipped shipments
@@ -107,6 +107,9 @@ namespace Grand.Services.Commands.Handlers.Orders
 
             //cancel discounts 
             await _discountService.CancelDiscount(request.Order.Id);
+
+            //event notification
+            await _mediator.Publish(new OrderDeletedEvent(request.Order));
 
             return true;
         }
