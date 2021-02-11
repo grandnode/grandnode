@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Grand.Domain.News;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Models.Settings;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class NewsSettingsProfile : Profile, IMapperProfile
+    public class NewsSettingsProfile : Profile, IAutoMapperProfile
     {
         public NewsSettingsProfile()
         {

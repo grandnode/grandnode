@@ -1,4 +1,4 @@
-﻿using Grand.Core.Infrastructure.Mapper;
+﻿using Grand.Core.Mapper;
 using Grand.Plugin.Shipping.ShippingPoint.Domain;
 using Grand.Plugin.Shipping.ShippingPoint.Models;
 
@@ -6,16 +6,6 @@ namespace Grand.Plugin.Shipping.ShippingPoint
 {
     public static class MappingExtensions
     {
-        public static TDestination MapTo<TSource, TDestination>(this TSource source)
-        {
-            return AutoMapperConfiguration.Mapper.Map<TSource, TDestination>(source);
-        }
-
-        public static TDestination MapTo<TSource, TDestination>(this TSource source, TDestination destination)
-        {
-            return AutoMapperConfiguration.Mapper.Map(source, destination);
-        }
-
         public static ShippingPointModel ToModel(this ShippingPoints entity)
         {
             return entity.MapTo<ShippingPoints, ShippingPointModel>();

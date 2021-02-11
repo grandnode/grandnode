@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Grand.Domain.Logging;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Models.Logging;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class LogProfile : Profile, IMapperProfile
+    public class LogProfile : Profile, IAutoMapperProfile
     {
         public LogProfile()
         {

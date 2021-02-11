@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Services.Shipping;
 using Grand.Web.Areas.Admin.Models.Shipping;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class IShippingRateComputationMethodProfile : Profile, IMapperProfile
+    public class IShippingRateComputationMethodProfile : Profile, IAutoMapperProfile
     {
         public IShippingRateComputationMethodProfile()
         {

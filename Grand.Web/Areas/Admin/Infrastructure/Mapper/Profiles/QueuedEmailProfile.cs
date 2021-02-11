@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Grand.Domain.Messages;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Models.Messages;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class QueuedEmailProfile : Profile, IMapperProfile
+    public class QueuedEmailProfile : Profile, IAutoMapperProfile
     {
         public QueuedEmailProfile()
         {

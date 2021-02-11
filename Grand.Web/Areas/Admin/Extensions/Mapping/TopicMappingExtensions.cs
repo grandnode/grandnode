@@ -1,4 +1,5 @@
-﻿using Grand.Domain.Topics;
+﻿using Grand.Core.Mapper;
+using Grand.Domain.Topics;
 using Grand.Services.Helpers;
 using Grand.Web.Areas.Admin.Models.Topics;
 

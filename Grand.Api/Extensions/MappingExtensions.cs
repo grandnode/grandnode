@@ -5,21 +5,12 @@ using Grand.Domain.Catalog;
 using Grand.Domain.Common;
 using Grand.Domain.Customers;
 using Grand.Domain.Media;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 
 namespace Grand.Api.Extensions
 {
     public static class MappingExtensions
     {
-        public static TDestination MapTo<TSource, TDestination>(this TSource source)
-        {
-            return AutoMapperConfiguration.Mapper.Map<TSource, TDestination>(source);
-        }
-
-        public static TDestination MapTo<TSource, TDestination>(this TSource source, TDestination destination)
-        {
-            return AutoMapperConfiguration.Mapper.Map(source, destination);
-        }
 
         #region Product
 

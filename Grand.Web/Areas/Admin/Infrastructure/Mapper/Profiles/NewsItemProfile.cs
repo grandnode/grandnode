@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Grand.Domain.News;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Services.Seo;
 using Grand.Web.Areas.Admin.Models.News;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class NewsItemProfile : Profile, IMapperProfile
+    public class NewsItemProfile : Profile, IAutoMapperProfile
     {
         public NewsItemProfile()
         {

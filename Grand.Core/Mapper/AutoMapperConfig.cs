@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 
-namespace Grand.Core.Infrastructure.Mapper
+namespace Grand.Core.Mapper
 {
-    public static class AutoMapperConfiguration
+    public static class AutoMapperConfig
     {
         /// <summary>
         /// Mapper
@@ -10,17 +10,11 @@ namespace Grand.Core.Infrastructure.Mapper
         public static IMapper Mapper { get; private set; }
 
         /// <summary>
-        /// Mapper configuration
-        /// </summary>
-        public static MapperConfiguration MapperConfiguration { get; private set; }
-
-        /// <summary>
         /// Initialize mapper
         /// </summary>
         /// <param name="config">Mapper configuration</param>
         public static void Init(MapperConfiguration config)
         {
-            MapperConfiguration = config;
             Mapper = config.CreateMapper();
         }
     }

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Grand.Domain.Catalog;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Services.Seo;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class CategoryProfile : Profile, IMapperProfile
+    public class CategoryProfile : Profile, IAutoMapperProfile
     {
         public CategoryProfile()
         {

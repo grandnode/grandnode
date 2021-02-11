@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using Grand.Domain.Vendors;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Services.Seo;
 using Grand.Web.Areas.Admin.Models.Vendors;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class VendorProfile : Profile, IMapperProfile
+    public class VendorProfile : Profile, IAutoMapperProfile
     {
         public VendorProfile()
         {

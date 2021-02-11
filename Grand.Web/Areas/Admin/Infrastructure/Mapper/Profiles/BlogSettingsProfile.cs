@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Grand.Domain.Blogs;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Models.Settings;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class BlogSettingsProfile : Profile, IMapperProfile
+    public class BlogSettingsProfile : Profile, IAutoMapperProfile
     {
         public BlogSettingsProfile()
         {

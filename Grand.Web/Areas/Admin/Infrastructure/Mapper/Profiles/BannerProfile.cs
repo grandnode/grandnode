@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using Grand.Domain.Messages;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Messages;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class BannerProfile : Profile, IMapperProfile
+    public class BannerProfile : Profile, IAutoMapperProfile
     {
         public BannerProfile()
         {

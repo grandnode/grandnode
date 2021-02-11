@@ -1,4 +1,5 @@
-﻿using Grand.Domain.Catalog;
+﻿using Grand.Core.Mapper;
+using Grand.Domain.Catalog;
 using Grand.Domain.Common;
 using Grand.Services.Common;
 using Grand.Services.Directory;

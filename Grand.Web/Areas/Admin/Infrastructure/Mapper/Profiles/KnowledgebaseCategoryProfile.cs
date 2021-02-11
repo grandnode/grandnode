@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using Grand.Domain.Knowledgebase;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Models.Knowledgebase;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class KnowledgebaseCategoryProfile : Profile, IMapperProfile
+    public class KnowledgebaseCategoryProfile : Profile, IAutoMapperProfile
     {
         public KnowledgebaseCategoryProfile()
         {

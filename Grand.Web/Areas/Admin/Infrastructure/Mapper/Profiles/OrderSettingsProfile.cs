@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Grand.Domain.Orders;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Models.Settings;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class OrderSettingsProfile : Profile, IMapperProfile
+    public class OrderSettingsProfile : Profile, IAutoMapperProfile
     {
         public OrderSettingsProfile()
         {

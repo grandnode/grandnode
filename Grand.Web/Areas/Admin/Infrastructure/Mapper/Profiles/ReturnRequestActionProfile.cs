@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using Grand.Domain.Orders;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Settings;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class ReturnRequestActionProfile : Profile, IMapperProfile
+    public class ReturnRequestActionProfile : Profile, IAutoMapperProfile
     {
         public ReturnRequestActionProfile()
         {

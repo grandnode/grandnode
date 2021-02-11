@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Domain.Tasks;
 using Grand.Web.Areas.Admin.Models.Tasks;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class ScheduleTaskProfile : Profile, IMapperProfile
+    public class ScheduleTaskProfile : Profile, IAutoMapperProfile
     {
         public ScheduleTaskProfile()
         {

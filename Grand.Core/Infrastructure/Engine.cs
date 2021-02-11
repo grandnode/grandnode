@@ -2,7 +2,7 @@
 using Grand.Core.Configuration;
 using Grand.Core.Extensions;
 using Grand.Core.Infrastructure.DependencyManagement;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Core.Plugins;
 using Grand.Core.Roslyn;
 using Grand.Domain.MongoDB;
@@ -49,13 +49,13 @@ namespace Grand.Core.Infrastructure
         private static void AddAutoMapper(ITypeFinder typeFinder)
         {
             //find mapper configurations provided by other assemblies
-            var mapperConfigurations = typeFinder.FindClassesOfType<IMapperProfile>();
+            var mapperConfigurations = typeFinder.FindClassesOfType<IAutoMapperProfile>();
 
             //create and sort instances of mapper configurations
             var instances = mapperConfigurations
                 .Where(mapperConfiguration => PluginManager.FindPlugin(mapperConfiguration)
-                    .Return(plugin => plugin.Installed, true)) //ignore not installed plugins
-                .Select(mapperConfiguration => (IMapperProfile)Activator.CreateInstance(mapperConfiguration))
+                    .Return(plugin => plugin.Installed, true))
+                .Select(mapperConfiguration => (IAutoMapperProfile)Activator.CreateInstance(mapperConfiguration))
                 .OrderBy(mapperConfiguration => mapperConfiguration.Order);
 
             //create AutoMapper configuration
@@ -67,8 +67,8 @@ namespace Grand.Core.Infrastructure
                 }
             });
 
-            //register
-            AutoMapperConfiguration.Init(config);
+            //register automapper
+            AutoMapperConfig.Init(config);
         }
 
         /// <summary>

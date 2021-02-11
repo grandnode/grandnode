@@ -1,4 +1,5 @@
-﻿using Grand.Domain.Polls;
+﻿using Grand.Core.Mapper;
+using Grand.Domain.Polls;
 using Grand.Services.Helpers;
 using Grand.Web.Areas.Admin.Models.Polls;
 

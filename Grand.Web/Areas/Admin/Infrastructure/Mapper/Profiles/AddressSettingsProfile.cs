@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Grand.Domain.Common;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Models.Settings;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class AddressSettingsProfile : Profile, IMapperProfile
+    public class AddressSettingsProfile : Profile, IAutoMapperProfile
     {
         public AddressSettingsProfile()
         {

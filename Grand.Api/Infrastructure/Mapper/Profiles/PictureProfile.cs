@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Grand.Api.DTOs.Common;
 using Grand.Domain.Media;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 
 namespace Grand.Api.Infrastructure.Mapper
 {
-    public class PictureProfile : Profile, IMapperProfile
+    public class PictureProfile : Profile, IAutoMapperProfile
     {
         public PictureProfile()
         {

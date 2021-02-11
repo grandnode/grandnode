@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Core.Plugins;
 using Grand.Web.Areas.Admin.Models.Plugins;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class PluginDescriptorProfile : Profile, IMapperProfile
+    public class PluginDescriptorProfile : Profile, IAutoMapperProfile
     {
         public PluginDescriptorProfile()
         {

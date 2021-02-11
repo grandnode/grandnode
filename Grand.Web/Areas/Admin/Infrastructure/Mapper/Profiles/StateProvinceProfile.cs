@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using Grand.Domain.Directory;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Directory;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class StateProvinceProfile : Profile, IMapperProfile
+    public class StateProvinceProfile : Profile, IAutoMapperProfile
     {
         public StateProvinceProfile()
         {

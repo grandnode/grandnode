@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
 using Grand.Api.DTOs.Customers;
 using Grand.Domain.Customers;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Services.Common;
 using System;
 using System.Linq;
 
 namespace Grand.Api.Infrastructure.Mapper
 {
-    public class CustomerProfile : Profile, IMapperProfile
+    public class CustomerProfile : Profile, IAutoMapperProfile
     {
         public CustomerProfile()
         {

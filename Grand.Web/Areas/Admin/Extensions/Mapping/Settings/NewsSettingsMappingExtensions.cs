@@ -1,4 +1,5 @@
-﻿using Grand.Domain.News;
+﻿using Grand.Core.Mapper;
+using Grand.Domain.News;
 using Grand.Web.Areas.Admin.Models.Settings;
 
 namespace Grand.Web.Areas.Admin.Extensions

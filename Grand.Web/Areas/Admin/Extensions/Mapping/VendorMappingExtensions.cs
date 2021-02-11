@@ -1,4 +1,5 @@
-﻿using Grand.Domain.Vendors;
+﻿using Grand.Core.Mapper;
+using Grand.Domain.Vendors;
 using Grand.Web.Areas.Admin.Models.Vendors;
 
 namespace Grand.Web.Areas.Admin.Extensions

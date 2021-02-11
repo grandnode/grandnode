@@ -1,4 +1,5 @@
-﻿using Grand.Domain.Courses;
+﻿using Grand.Core.Mapper;
+using Grand.Domain.Courses;
 using Grand.Web.Areas.Admin.Models.Courses;
 
 namespace Grand.Web.Areas.Admin.Extensions

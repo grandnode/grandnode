@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using Grand.Domain.Stores;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Stores;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class StoreProfile : Profile, IMapperProfile
+    public class StoreProfile : Profile, IAutoMapperProfile
     {
         public StoreProfile()
         {

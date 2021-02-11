@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Grand.Api.Infrastructure.Mapper;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 
 namespace Grand.Api.Tests.Helpers
 {
@@ -32,7 +32,7 @@ namespace Grand.Api.Tests.Helpers
                 cfg.AddProfile(tierPricemapper.GetType());
 
             });
-            AutoMapperConfiguration.Init(config);
+            AutoMapperConfig.Init(config);
         }
     }
 }

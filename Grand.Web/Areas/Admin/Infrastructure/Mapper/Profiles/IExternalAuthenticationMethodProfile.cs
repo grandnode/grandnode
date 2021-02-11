@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Services.Authentication.External;
 using Grand.Web.Areas.Admin.Models.ExternalAuthentication;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class IExternalAuthenticationMethodProfile : Profile, IMapperProfile
+    public class IExternalAuthenticationMethodProfile : Profile, IAutoMapperProfile
     {
         public IExternalAuthenticationMethodProfile()
         {

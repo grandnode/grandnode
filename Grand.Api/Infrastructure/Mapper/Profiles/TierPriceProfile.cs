@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Grand.Api.DTOs.Catalog;
 using Grand.Domain.Catalog;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 
 namespace Grand.Api.Infrastructure.Mapper
 {
-    public class TierPriceProfile : Profile, IMapperProfile
+    public class TierPriceProfile : Profile, IAutoMapperProfile
     {
         public TierPriceProfile()
         {

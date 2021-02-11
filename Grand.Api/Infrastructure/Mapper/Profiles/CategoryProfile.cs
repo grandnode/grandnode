@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Grand.Api.DTOs.Catalog;
 using Grand.Domain.Catalog;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 
 namespace Grand.Api.Infrastructure.Mapper
 {
-    public class CategoryProfile : Profile, IMapperProfile
+    public class CategoryProfile : Profile, IAutoMapperProfile
     {
 
         public CategoryProfile()

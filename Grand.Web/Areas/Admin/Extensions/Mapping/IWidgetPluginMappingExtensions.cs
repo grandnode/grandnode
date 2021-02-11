@@ -1,4 +1,5 @@
-﻿using Grand.Services.Cms;
+﻿using Grand.Core.Mapper;
+using Grand.Services.Cms;
 using Grand.Web.Areas.Admin.Models.Cms;
 
 namespace Grand.Web.Areas.Admin.Extensions
