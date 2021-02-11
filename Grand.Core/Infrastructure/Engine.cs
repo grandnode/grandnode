@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Grand.Core.Configuration;
 using Grand.Core.Extensions;
-using Grand.Core.Infrastructure.DependencyManagement;
+using Grand.Core.DependencyInjection;
 using Grand.Core.Mapper;
 using Grand.Core.Plugins;
 using Grand.Core.Roslyn;
@@ -196,12 +196,12 @@ namespace Grand.Core.Infrastructure
             serviceCollection.AddSingleton<ITypeFinder>(typeFinder);
 
             //find dependency registrars provided by other assemblies
-            var dependencyRegistrars = typeFinder.FindClassesOfType<IDependencyRegistrar>();
+            var dependencyRegistrars = typeFinder.FindClassesOfType<IDependencyInjection>();
 
             //create and sort instances of dependency registrars
             var instances = dependencyRegistrars
                 //.Where(startup => PluginManager.FindPlugin(startup).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
-                .Select(dependencyRegistrar => (IDependencyRegistrar)Activator.CreateInstance(dependencyRegistrar))
+                .Select(dependencyRegistrar => (IDependencyInjection)Activator.CreateInstance(dependencyRegistrar))
                 .OrderBy(dependencyRegistrar => dependencyRegistrar.Order);
 
             var config = new GrandConfig();

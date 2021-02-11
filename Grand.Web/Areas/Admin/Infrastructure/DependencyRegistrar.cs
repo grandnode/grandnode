@@ -1,13 +1,13 @@
 using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
-using Grand.Core.Infrastructure.DependencyManagement;
+using Grand.Core.DependencyInjection;
 using Grand.Web.Areas.Admin.Interfaces;
 using Grand.Web.Areas.Admin.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Grand.Web.Areas.Admin.Infrastructure
 {
-    public class DependencyRegistrar : IDependencyRegistrar
+    public class DependencyInjection : IDependencyInjection
     {
         public virtual void Register(IServiceCollection serviceCollection, ITypeFinder typeFinder, GrandConfig config)
         {

@@ -6,7 +6,7 @@ using Grand.Core.Caching.Redis;
 using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Infrastructure;
-using Grand.Core.Infrastructure.DependencyManagement;
+using Grand.Core.DependencyInjection;
 using Grand.Core.Plugins;
 using Grand.Core.Routing;
 using Grand.Core.Validators;
@@ -28,7 +28,7 @@ namespace Grand.Framework.Infrastructure
     /// <summary>
     /// Dependency registrar
     /// </summary>
-    public class DependencyRegistrar : IDependencyRegistrar
+    public class DependencyInjection : IDependencyInjection
     {
         /// <summary>
         /// Register services and interfaces

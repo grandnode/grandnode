@@ -1,7 +1,7 @@
 using Grand.Core.Configuration;
 using Grand.Core.Data;
 using Grand.Core.Infrastructure;
-using Grand.Core.Infrastructure.DependencyManagement;
+using Grand.Core.DependencyInjection;
 using Grand.Services.Admin;
 using Grand.Services.Affiliates;
 using Grand.Services.Authentication;
@@ -47,7 +47,7 @@ namespace Grand.Services.Infrastructure
     /// <summary>
     /// Dependency registrar
     /// </summary>
-    public class DependencyRegistrar : IDependencyRegistrar
+    public class DependencyInjection : IDependencyInjection
     {
         /// <summary>
         /// Register services and interfaces

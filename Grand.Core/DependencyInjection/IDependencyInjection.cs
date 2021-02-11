@@ -1,12 +1,13 @@
 ﻿using Grand.Core.Configuration;
+using Grand.Core.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Grand.Core.Infrastructure.DependencyManagement
+namespace Grand.Core.DependencyInjection
 {
     /// <summary>
     /// Dependency registrar interface
     /// </summary>
-    public interface IDependencyRegistrar
+    public interface IDependencyInjection
     {
         /// <summary>
         /// Register services and interfaces

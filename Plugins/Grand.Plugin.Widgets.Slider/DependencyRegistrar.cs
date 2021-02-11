@@ -1,6 +1,6 @@
 ﻿using Grand.Core.Configuration;
 using Grand.Core.Infrastructure;
-using Grand.Core.Infrastructure.DependencyManagement;
+using Grand.Core.DependencyInjection;
 using Grand.Plugin.Widgets.Slider.Domain;
 using Grand.Plugin.Widgets.Slider.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,7 +8,7 @@ using MongoDB.Bson.Serialization;
 
 namespace Grand.Plugin.Widgets.Slider
 {
-    public class DependencyRegistrar : IDependencyRegistrar
+    public class DependencyInjection : IDependencyInjection
     {
         public virtual void Register(IServiceCollection serviceCollection, ITypeFinder typeFinder, GrandConfig config)
         {
