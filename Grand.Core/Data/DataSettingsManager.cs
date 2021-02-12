@@ -124,7 +124,7 @@ namespace Grand.Core.Data
             var filePath = Path.Combine(CommonHelper.MapPath("~/App_Data/"), filename);
             if (!File.Exists(filePath))
             {
-                File.Create(filePath);
+                using FileStream fs = File.Create(filePath);
             }
             var text = ComposeSettings(settings);
             await File.WriteAllTextAsync(filePath, text);
