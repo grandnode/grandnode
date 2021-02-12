@@ -84,7 +84,7 @@
 /* product price */
 
 .product-details-page .overview .actual-price {
-    color: #17a2b8;
+    color: #0E606C;
     font-size: 24px;
     font-weight: 700;
 }
@@ -152,7 +152,7 @@
     right: 0;
 }
 .product-details-page .nav-tabs .nav-link.active::before {
-    background: #17a2b8;
+    background: #0E606C;
     left: 0;
     right: 0;
 }
