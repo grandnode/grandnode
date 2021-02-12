@@ -31,14 +31,14 @@
             <b-navbar-nav class="top-header-items order-3">
                 <template>
                     <li class="nav-item">
-                        <a class="nav-link">
+                        <span class="nav-link">
                             <template>
                                 <b-form-checkbox size="lg" v-model="darkMode" name="contrast-button" class="contrast-switch" switch>
                                     <b-icon icon="sun" class="light" variant="info"></b-icon>
                                     <b-icon icon="moon" class="dark" variant="dark"></b-icon>
                                 </b-form-checkbox>
                             </template>
-                        </a>
+                        </span>
                     </li>
                 </template>
                 <b-nav-item class="d-lg-block d-none">
@@ -53,9 +53,9 @@
                 </b-modal>
                 <template>
                     <li class="nav-item">
-                        <a class="nav-link">
+                        <span class="nav-link">
                             <b-icon icon="gear" :variant="[darkMode ? 'white' : 'dark']" v-b-toggle.sidebar-right></b-icon>
-                        </a>
+                        </span>
                         <template>
                             <b-sidebar id="sidebar-right" body-class="user-panel" title="@T("Account.MyAccount")" @if (supportRtl) { <text> left</text> } else { <text>right</text> } backdrop>
                                 <div class="d-inline-flex flex-wrap mb-2">
