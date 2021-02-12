@@ -286,31 +286,24 @@ namespace Grand.Services.Installation
             {
                 new MeasureDimension
                 {
-                    Name = "inch(es)",
-                    SystemKeyword = "inches",
+                    Name = "centimetre(s)",
+                    SystemKeyword = "centimetres",
                     Ratio = 1M,
                     DisplayOrder = 1,
                 },
                 new MeasureDimension
                 {
-                    Name = "feet",
-                    SystemKeyword = "feet",
-                    Ratio = 0.08333333M,
+                    Name = "inch(es)",
+                    SystemKeyword = "inches",
+                    Ratio = 0.393701M,
                     DisplayOrder = 2,
                 },
                 new MeasureDimension
                 {
-                    Name = "meter(s)",
-                    SystemKeyword = "meters",
-                    Ratio = 0.0254M,
+                    Name = "feet",
+                    SystemKeyword = "feet",
+                    Ratio = 0.0328084M,
                     DisplayOrder = 3,
-                },
-                new MeasureDimension
-                {
-                    Name = "millimetre(s)",
-                    SystemKeyword = "millimetres",
-                    Ratio = 25.4M,
-                    DisplayOrder = 4,
                 }
             };
 
@@ -5122,7 +5115,7 @@ namespace Grand.Services.Installation
             });
 
             await _settingService.SaveSetting(new MeasureSettings {
-                BaseDimensionId = _measureDimensionRepository.Table.Single(m => m.SystemKeyword == "inches").Id,
+                BaseDimensionId = _measureDimensionRepository.Table.Single(m => m.SystemKeyword == "centimetres").Id,
                 BaseWeightId = _measureWeightRepository.Table.Single(m => m.SystemKeyword == "lb").Id,
             });
 
