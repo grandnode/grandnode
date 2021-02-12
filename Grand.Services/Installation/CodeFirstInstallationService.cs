@@ -4724,7 +4724,7 @@ namespace Grand.Services.Installation
                                            IsPasswordProtected = false,
                                            DisplayOrder = 1,
                                            Title = "",
-                                           Body = "<p>Put your apply vendor instructions here. You can edit this in the admin site.</p>",
+                                           Body = "<p>Provide information about the application process for creating a seller (vendor) account. You can edit this in the admin panel.</p>",
                                            TopicTemplateId = defaultTopicTemplate.Id,
                                            Published = true
                                        },
