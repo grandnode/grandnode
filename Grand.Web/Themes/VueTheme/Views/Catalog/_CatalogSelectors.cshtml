@@ -8,8 +8,7 @@
         {
             <div class="sort-container">
                 <label class="col-form-label">@T("Catalog.OrderBy")</label>
-                <select name="products-orderby" class="form-control custom-select" asp-items="Model.AvailableSortOptions"
-                        onchange = "location = (this.value);" ></select>                
+                <select class="custom-select form-control" asp-for="AvailableSortOption" asp-items="Model.AvailableSortOptions" onchange="location = (this.value);" aria-label="@T("Catalog.OrderBy")"></select>         
             </div>
         }
         <div class="item-statistics d-sm-flex d-none align-items-center mx-auto order-2" id="items_statistics">
@@ -44,10 +43,10 @@
         @*page size*@
         @if (Model.AllowCustomersToSelectPageSize)
         {
-            <div class="sort-container">
-                <label class="col-form-label">@T("Catalog.PageSize")</label>
-                @Html.DropDownList("products-pagesize", Model.PageSizeOptions, new { @class = "custom-select form-control", onchange = "window.location.replace(this.value);" })
-            </div>
+    <div class="sort-container">
+        <label class="col-form-label">@T("Catalog.PageSize")</label>
+        <select class="custom-select form-control" asp-for="PageSizeOption" asp-items="Model.PageSizeOptions" onchange="location = (this.value);" aria-label="@T("Catalog.PageSize")"></select>
+    </div>
         }
         @*view mode*@
         @if (Model.AllowProductViewModeChanging)
