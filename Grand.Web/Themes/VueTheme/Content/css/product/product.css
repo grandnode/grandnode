@@ -189,3 +189,6 @@
 [dark-theme] .product-details-page .gallery img.image.thumb-image {
     border-color: #666;
 }
+[dark-theme="true"] .product-details-page .overview .actual-price {
+    color: #1FB0C7;
+}
