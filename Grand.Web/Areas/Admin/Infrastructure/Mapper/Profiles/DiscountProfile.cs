@@ -1,13 +1,13 @@
 ﻿using AutoMapper;
 using Grand.Domain.Discounts;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Models.Discounts;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class DiscountProfile : Profile, IMapperProfile
+    public class DiscountProfile : Profile, IAutoMapperProfile
     {
         public DiscountProfile()
         {

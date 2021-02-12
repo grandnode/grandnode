@@ -1,4 +1,4 @@
-﻿using Grand.Core.Infrastructure.Mapper;
+﻿using Grand.Core.Mapper;
 using Grand.Core.Models;
 using Grand.Domain.Localization;
 using Grand.Domain.Stores;
@@ -18,16 +18,6 @@ namespace Grand.Plugin.Widgets.Slider
 {
     public static class MyExtensions
     {
-        public static TDestination MapTo<TSource, TDestination>(this TSource source)
-        {
-            return AutoMapperConfiguration.Mapper.Map<TSource, TDestination>(source);
-        }
-
-        public static TDestination MapTo<TSource, TDestination>(this TSource source, TDestination destination)
-        {
-            return AutoMapperConfiguration.Mapper.Map(source, destination);
-        }
-
         public static SlideModel ToModel(this PictureSlider entity)
         {
             return entity.MapTo<PictureSlider, SlideModel>();

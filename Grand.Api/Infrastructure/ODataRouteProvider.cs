@@ -1,8 +1,8 @@
 ﻿using Grand.Api.Constants;
 using Grand.Api.Infrastructure.DependencyManagement;
 using Grand.Core.Configuration;
-using Grand.Core.Infrastructure;
 using Grand.Core.Routing;
+using Grand.Core.TypeFinders;
 using Microsoft.AspNet.OData.Builder;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Routing;
@@ -41,7 +41,7 @@ namespace Grand.Api.Infrastructure
 
         private void RegisterDependencies(ODataConventionModelBuilder builder, ApiConfig apiConfig)
         {
-            var typeFinder = new WebAppTypeFinder();
+            var typeFinder = new AppTypeFinder();
 
             //find dependency registrars provided by other assemblies
             var dependencyRegistrars = typeFinder.FindClassesOfType<IDependencyEdmModel>();

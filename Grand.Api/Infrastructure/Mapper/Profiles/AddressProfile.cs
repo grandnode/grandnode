@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Grand.Api.DTOs.Customers;
 using Grand.Domain.Common;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 
 namespace Grand.Api.Infrastructure.Mapper
 {
-    public class AddressProfile : Profile, IMapperProfile
+    public class AddressProfile : Profile, IAutoMapperProfile
     {
         public AddressProfile()
         {

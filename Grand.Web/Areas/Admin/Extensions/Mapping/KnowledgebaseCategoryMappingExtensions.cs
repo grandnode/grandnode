@@ -1,4 +1,5 @@
-﻿using Grand.Domain.Knowledgebase;
+﻿using Grand.Core.Mapper;
+using Grand.Domain.Knowledgebase;
 using Grand.Web.Areas.Admin.Models.Knowledgebase;
 
 namespace Grand.Web.Areas.Admin.Extensions

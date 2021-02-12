@@ -5,10 +5,10 @@ using Grand.Core.Caching.Message;
 using Grand.Core.Caching.Redis;
 using Grand.Core.Configuration;
 using Grand.Core.Data;
-using Grand.Core.Infrastructure;
-using Grand.Core.Infrastructure.DependencyManagement;
+using Grand.Core.DependencyInjection;
 using Grand.Core.Plugins;
 using Grand.Core.Routing;
+using Grand.Core.TypeFinders;
 using Grand.Core.Validators;
 using Grand.Domain.Data;
 using Grand.Framework.Middleware;
@@ -28,7 +28,7 @@ namespace Grand.Framework.Infrastructure
     /// <summary>
     /// Dependency registrar
     /// </summary>
-    public class DependencyRegistrar : IDependencyRegistrar
+    public class DependencyInjection : IDependencyInjection
     {
         /// <summary>
         /// Register services and interfaces
@@ -73,7 +73,7 @@ namespace Grand.Framework.Infrastructure
             if (string.IsNullOrEmpty(dataProviderSettings.DataConnectionString))
             {
                 serviceCollection.AddTransient(c => dataSettingsManager.LoadSettings());
-                serviceCollection.AddTransient<BaseDataProviderManager>(c=> new MongoDBDataProviderManager(c.GetRequiredService<DataSettings>()));
+                serviceCollection.AddTransient<BaseDataProviderManager>(c => new MongoDBDataProviderManager(c.GetRequiredService<DataSettings>()));
                 serviceCollection.AddTransient<IDataProvider>(x => x.GetRequiredService<BaseDataProviderManager>().LoadDataProvider());
             }
             if (dataProviderSettings != null && dataProviderSettings.IsValid())
@@ -82,25 +82,25 @@ namespace Grand.Framework.Infrastructure
                 var mongourl = new MongoUrl(connectionString);
                 var databaseName = mongourl.DatabaseName;
                 serviceCollection.AddScoped(c => new MongoClient(mongourl).GetDatabase(databaseName));
-        
+
             }
-            
+
             serviceCollection.AddScoped<IMongoDBContext, MongoDBContext>();
             //MongoDbRepository
-            
+
             serviceCollection.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
         }
 
         private void RegisterCache(IServiceCollection serviceCollection, GrandConfig config)
         {
-            serviceCollection.AddSingleton<ICacheBase,MemoryCacheBase>();
+            serviceCollection.AddSingleton<ICacheBase, MemoryCacheBase>();
             if (config.RedisPubSubEnabled)
             {
                 var redis = ConnectionMultiplexer.Connect(config.RedisPubSubConnectionString);
                 serviceCollection.AddSingleton<ISubscriber>(c => redis.GetSubscriber());
                 serviceCollection.AddSingleton<IMessageBus, RedisMessageBus>();
-                serviceCollection.AddSingleton<ICacheBase,RedisMessageCacheManager>();
+                serviceCollection.AddSingleton<ICacheBase, RedisMessageCacheManager>();
             }
         }
 
@@ -133,7 +133,7 @@ namespace Grand.Framework.Infrastructure
                 types.Select(c => serviceCollection.AddScoped(c, consumer));
             }
         }
-        
+
         private void RegisterFramework(IServiceCollection serviceCollection)
         {
             serviceCollection.AddScoped<IPageHeadBuilder, PageHeadBuilder>();
@@ -145,10 +145,10 @@ namespace Grand.Framework.Infrastructure
 
             serviceCollection.AddScoped<SlugRouteTransformer>();
 
-            serviceCollection.AddScoped<IResourceManager,ResourceManager>();
+            serviceCollection.AddScoped<IResourceManager, ResourceManager>();
 
             //powered by
-            serviceCollection.AddSingleton<IPoweredByMiddlewareOptions,PoweredByMiddlewareOptions>();
+            serviceCollection.AddSingleton<IPoweredByMiddlewareOptions, PoweredByMiddlewareOptions>();
         }
 
     }

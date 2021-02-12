@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 
-namespace Grand.Core.TypeConverters
+namespace Grand.Core.TypeConverters.Converter
 {
     /// <summary>
     /// Generic Dictionary type converted

@@ -1,4 +1,5 @@
-﻿using Grand.Domain.Catalog;
+﻿using Grand.Core.Mapper;
+using Grand.Domain.Catalog;
 using Grand.Services.Helpers;
 using Grand.Web.Areas.Admin.Models.Catalog;
 

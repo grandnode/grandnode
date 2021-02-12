@@ -1,4 +1,5 @@
-﻿using Grand.Domain.Discounts;
+﻿using Grand.Core.Mapper;
+using Grand.Domain.Discounts;
 using Grand.Services.Helpers;
 using Grand.Web.Areas.Admin.Models.Discounts;
 

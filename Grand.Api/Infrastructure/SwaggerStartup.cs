@@ -1,6 +1,6 @@
 ﻿using Grand.Api.Extensions;
+using Grand.Core;
 using Grand.Core.Configuration;
-using Grand.Core.Infrastructure;
 using Microsoft.AspNet.OData.Formatter;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;

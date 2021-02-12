@@ -1,4 +1,5 @@
-﻿using Grand.Domain.Stores;
+﻿using Grand.Core.Mapper;
+using Grand.Domain.Stores;
 using Grand.Web.Areas.Admin.Models.Stores;
 
 namespace Grand.Web.Areas.Admin.Extensions

@@ -1,4 +1,5 @@
-﻿using Grand.Domain.Blogs;
+﻿using Grand.Core.Mapper;
+using Grand.Domain.Blogs;
 using Grand.Services.Helpers;
 using Grand.Web.Areas.Admin.Models.Blogs;
 

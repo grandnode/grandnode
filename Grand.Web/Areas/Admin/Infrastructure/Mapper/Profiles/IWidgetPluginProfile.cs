@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Services.Cms;
 using Grand.Web.Areas.Admin.Models.Cms;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class IWidgetPluginProfile : Profile, IMapperProfile
+    public class IWidgetPluginProfile : Profile, IAutoMapperProfile
     {
         public IWidgetPluginProfile()
         {

@@ -1,19 +1,18 @@
 ﻿using Grand.Core.Configuration;
-using Grand.Core.Infrastructure;
-using Grand.Core.Infrastructure.DependencyManagement;
+using Grand.Core.DependencyInjection;
+using Grand.Core.TypeFinders;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Grand.Plugin.Payments.CashOnDelivery
 {
-    public class DependencyRegistrar : IDependencyRegistrar
+    public class DependencyInjection : IDependencyInjection
     {
         public virtual void Register(IServiceCollection serviceCollection, ITypeFinder typeFinder, GrandConfig config)
         {
             serviceCollection.AddScoped<CashOnDeliveryPaymentProcessor>();
         }
 
-        public int Order
-        {
+        public int Order {
             get { return 10; }
         }
     }

@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Services.Tax;
 using Grand.Web.Areas.Admin.Models.Tax;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class ITaxProviderProfile : Profile, IMapperProfile
+    public class ITaxProviderProfile : Profile, IAutoMapperProfile
     {
         public ITaxProviderProfile()
         {

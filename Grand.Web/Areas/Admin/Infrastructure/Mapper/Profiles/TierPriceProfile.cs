@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Grand.Domain.Catalog;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Models.Catalog;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class TierPriceProfile : Profile, IMapperProfile
+    public class TierPriceProfile : Profile, IAutoMapperProfile
     {
         public TierPriceProfile()
         {

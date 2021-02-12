@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Grand.Api.DTOs.Customers;
 using Grand.Domain.Customers;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 
 namespace Grand.Api.Infrastructure.Mapper
 {
-    public class CustomerRoleProfile : Profile, IMapperProfile
+    public class CustomerRoleProfile : Profile, IAutoMapperProfile
     {
         public CustomerRoleProfile()
         {

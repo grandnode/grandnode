@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Grand.Domain.Topics;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Services.Seo;
 using Grand.Web.Areas.Admin.Models.Topics;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class TopicProfile : Profile, IMapperProfile
+    public class TopicProfile : Profile, IAutoMapperProfile
     {
         public TopicProfile()
         {

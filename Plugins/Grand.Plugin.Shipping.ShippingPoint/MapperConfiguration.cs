@@ -1,11 +1,11 @@
-﻿using Grand.Core.Infrastructure.Mapper;
+﻿using Grand.Core.Mapper;
 using AutoMapper;
 using Grand.Plugin.Shipping.ShippingPoint.Domain;
 using Grand.Plugin.Shipping.ShippingPoint.Models;
 
 namespace Grand.Plugin.Shipping.ShippingPoint
 {
-    public class MapperConfiguration : Profile, IMapperProfile
+    public class MapperConfiguration : Profile, IAutoMapperProfile
     {
         public int Order
         {

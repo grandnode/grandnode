@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Grand.Domain.Shipping;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Models.Settings;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class ShippingSettingsProfile : Profile, IMapperProfile
+    public class ShippingSettingsProfile : Profile, IAutoMapperProfile
     {
         public ShippingSettingsProfile()
         {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Grand.Domain.Courses;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Courses;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class CourseProfile : Profile, IMapperProfile
+    public class CourseProfile : Profile, IAutoMapperProfile
     {
         public CourseProfile()
         {

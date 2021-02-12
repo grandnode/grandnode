@@ -1,14 +1,14 @@
-﻿using Grand.Core.Data;
+﻿using Grand.Core;
+using Grand.Core.Data;
 using Grand.Core.Extensions;
-using Grand.Core.Infrastructure;
 using Grand.Core.Plugins;
+using Grand.Core.TypeFinders;
 using Grand.Services.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
 using System.Linq;
 
 namespace Grand.Framework.StartupConfigure
@@ -38,7 +38,7 @@ namespace Grand.Framework.StartupConfigure
             //database is already installed, so start scheduled tasks
             if (DataSettingsHelper.DatabaseIsInstalled())
             {
-                var typeFinder = new WebAppTypeFinder();
+                var typeFinder = new AppTypeFinder();
                 var scheduleTasks = typeFinder.FindClassesOfType<IScheduleTask>();
 
                 var scheduleTasksInstalled = scheduleTasks

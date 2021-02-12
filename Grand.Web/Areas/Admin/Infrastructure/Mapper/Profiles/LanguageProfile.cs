@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Models.Localization;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class LanguageProfile : Profile, IMapperProfile
+    public class LanguageProfile : Profile, IAutoMapperProfile
     {
         public LanguageProfile()
         {

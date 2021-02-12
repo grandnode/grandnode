@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using Grand.Core.TypeFinders;
 
 namespace Grand.Services.Tests.Configuration
 {
@@ -64,7 +65,7 @@ namespace Grand.Services.Tests.Configuration
 
         public override IList<Setting> GetAllSettings()
         {
-            string directory = new WebAppTypeFinder().GetBinDirectory();
+            string directory = new AppTypeFinder().GetBinDirectory();
             var configurationBasePath = "";
             if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 configurationBasePath = directory.Substring(0, directory.IndexOf("\\Tests\\Grand.Services.Tests\\") + 27);

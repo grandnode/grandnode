@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Grand.Domain.Catalog;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Catalog;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class SpecificationAttributeProfile : Profile, IMapperProfile
+    public class SpecificationAttributeProfile : Profile, IAutoMapperProfile
     {
         public SpecificationAttributeProfile()
         {

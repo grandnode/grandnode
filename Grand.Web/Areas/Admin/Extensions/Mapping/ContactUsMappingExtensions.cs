@@ -1,4 +1,5 @@
-﻿using Grand.Domain.Messages;
+﻿using Grand.Core.Mapper;
+using Grand.Domain.Messages;
 using Grand.Web.Areas.Admin.Models.Messages;
 
 namespace Grand.Web.Areas.Admin.Extensions

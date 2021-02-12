@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Grand.Domain.Customers;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Models.Settings;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class CustomerSettingsProfile : Profile, IMapperProfile
+    public class CustomerSettingsProfile : Profile, IAutoMapperProfile
     {
         public CustomerSettingsProfile()
         {

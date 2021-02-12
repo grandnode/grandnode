@@ -1,5 +1,5 @@
-﻿using Grand.Core.Configuration;
-using Grand.Core.Infrastructure;
+﻿using Grand.Core;
+using Grand.Core.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Rewrite;
@@ -55,15 +55,14 @@ namespace Grand.Framework.StartupConfigure
                 rewriteOptions = true;
                 urlRewriteOptions.AddRedirectToHttpsPermanent();
             }
-            if(rewriteOptions)
+            if (rewriteOptions)
                 application.UseRewriter(urlRewriteOptions);
         }
 
         /// <summary>
         /// Gets order of this startup configuration implementation
         /// </summary>
-        public int Order
-        {
+        public int Order {
             get { return -50; }
         }
     }

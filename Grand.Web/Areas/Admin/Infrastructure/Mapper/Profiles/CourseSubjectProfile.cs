@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Grand.Domain.Courses;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Models.Courses;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class CourseSubjectProfile : Profile, IMapperProfile
+    public class CourseSubjectProfile : Profile, IAutoMapperProfile
     {
         public CourseSubjectProfile()
         {

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Grand.Core.Configuration;
 using Grand.Core.Extensions;
-using Grand.Core.Infrastructure.DependencyManagement;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.DependencyInjection;
+using Grand.Core.Mapper;
 using Grand.Core.Plugins;
 using Grand.Core.Roslyn;
 using Grand.Domain.MongoDB;
@@ -12,8 +12,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
+using Grand.Core.TypeFinders;
 
-namespace Grand.Core.Infrastructure
+namespace Grand.Core
 {
     /// <summary>
     /// Represents engine
@@ -49,13 +50,13 @@ namespace Grand.Core.Infrastructure
         private static void AddAutoMapper(ITypeFinder typeFinder)
         {
             //find mapper configurations provided by other assemblies
-            var mapperConfigurations = typeFinder.FindClassesOfType<IMapperProfile>();
+            var mapperConfigurations = typeFinder.FindClassesOfType<IAutoMapperProfile>();
 
             //create and sort instances of mapper configurations
             var instances = mapperConfigurations
                 .Where(mapperConfiguration => PluginManager.FindPlugin(mapperConfiguration)
-                    .Return(plugin => plugin.Installed, true)) //ignore not installed plugins
-                .Select(mapperConfiguration => (IMapperProfile)Activator.CreateInstance(mapperConfiguration))
+                    .Return(plugin => plugin.Installed, true))
+                .Select(mapperConfiguration => (IAutoMapperProfile)Activator.CreateInstance(mapperConfiguration))
                 .OrderBy(mapperConfiguration => mapperConfiguration.Order);
 
             //create AutoMapper configuration
@@ -67,8 +68,8 @@ namespace Grand.Core.Infrastructure
                 }
             });
 
-            //register
-            AutoMapperConfiguration.Init(config);
+            //register automapper
+            AutoMapperConfig.Init(config);
         }
 
         /// <summary>
@@ -131,7 +132,7 @@ namespace Grand.Core.Infrastructure
         public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             //find startup configurations provided by other assemblies
-            var typeFinder = new WebAppTypeFinder();
+            var typeFinder = new AppTypeFinder();
             var startupConfigurations = typeFinder.FindClassesOfType<IGrandStartup>();
 
             //create and sort instances of startup configurations
@@ -167,7 +168,7 @@ namespace Grand.Core.Infrastructure
         public static void ConfigureRequestPipeline(IApplicationBuilder application, IWebHostEnvironment webHostEnvironment)
         {
             //find startup configurations provided by other assemblies
-            var typeFinder = new WebAppTypeFinder();
+            var typeFinder = new AppTypeFinder();
             var startupConfigurations = typeFinder.FindClassesOfType<IGrandStartup>();
 
             //create and sort instances of startup configurations
@@ -190,18 +191,18 @@ namespace Grand.Core.Infrastructure
         /// <param name="configuration">Configuration</param>
         public static void ConfigureContainer(IServiceCollection serviceCollection, IConfiguration configuration)
         {
-            var typeFinder = new WebAppTypeFinder();
+            var typeFinder = new AppTypeFinder();
 
             //register type finder
             serviceCollection.AddSingleton<ITypeFinder>(typeFinder);
 
             //find dependency registrars provided by other assemblies
-            var dependencyRegistrars = typeFinder.FindClassesOfType<IDependencyRegistrar>();
+            var dependencyRegistrars = typeFinder.FindClassesOfType<IDependencyInjection>();
 
             //create and sort instances of dependency registrars
             var instances = dependencyRegistrars
                 //.Where(startup => PluginManager.FindPlugin(startup).Return(plugin => plugin.Installed, true)) //ignore not installed plugins
-                .Select(dependencyRegistrar => (IDependencyRegistrar)Activator.CreateInstance(dependencyRegistrar))
+                .Select(dependencyRegistrar => (IDependencyInjection)Activator.CreateInstance(dependencyRegistrar))
                 .OrderBy(dependencyRegistrar => dependencyRegistrar.Order);
 
             var config = new GrandConfig();

@@ -1,4 +1,5 @@
-﻿using Grand.Core.Plugins;
+﻿using Grand.Core.Mapper;
+using Grand.Core.Plugins;
 using Grand.Web.Areas.Admin.Models.Plugins;
 
 namespace Grand.Web.Areas.Admin.Extensions

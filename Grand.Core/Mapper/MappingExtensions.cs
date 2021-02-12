@@ -1,17 +1,15 @@
-﻿using Grand.Core.Infrastructure.Mapper;
-
-namespace Grand.Web.Areas.Admin.Extensions
+﻿namespace Grand.Core.Mapper
 {
     public static class MappingExtensions
     {
         public static TDestination MapTo<TSource, TDestination>(this TSource source)
         {
-            return AutoMapperConfiguration.Mapper.Map<TSource, TDestination>(source);
+            return AutoMapperConfig.Mapper.Map<TSource, TDestination>(source);
         }
 
         public static TDestination MapTo<TSource, TDestination>(this TSource source, TDestination destination)
         {
-            return AutoMapperConfiguration.Mapper.Map(source, destination);
+            return AutoMapperConfig.Mapper.Map(source, destination);
         }
     }
 }

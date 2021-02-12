@@ -2,11 +2,11 @@
 using Grand.Core;
 using Grand.Core.Configuration;
 using Grand.Core.Data;
-using Grand.Core.Infrastructure;
+using Grand.Core.ModelBinding;
 using Grand.Core.Plugins;
+using Grand.Core.TypeFinders;
 using Grand.Domain.Configuration;
 using Grand.Framework.Extensions;
-using Grand.Core.ModelBinding;
 using Grand.Framework.Mvc.Routing;
 using Grand.Framework.Themes;
 using Grand.Services.Authentication;
@@ -220,7 +220,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             });
 
             //register external authentication plugins now
-            var typeFinder = new WebAppTypeFinder();
+            var typeFinder = new AppTypeFinder();
             var externalAuthConfigurations = typeFinder.FindClassesOfType<IExternalAuthenticationRegistrar>();
             //create and sort instances of external authentication configurations
             var externalAuthInstances = externalAuthConfigurations
@@ -285,7 +285,7 @@ namespace Grand.Framework.Infrastructure.Extensions
             mvcBuilder.AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
 
             //add fluent validation
-            var typeFinder = new WebAppTypeFinder();
+            var typeFinder = new AppTypeFinder();
 
             mvcBuilder.AddFluentValidation(configuration =>
             {
@@ -338,7 +338,7 @@ namespace Grand.Framework.Infrastructure.Extensions
 
         public static void AddSettings(this IServiceCollection services)
         {
-            var typeFinder = new WebAppTypeFinder();
+            var typeFinder = new AppTypeFinder();
             var settings = typeFinder.FindClassesOfType<ISettings>();
             var instances = settings.Select(x => (ISettings)Activator.CreateInstance(x));
             foreach (var item in instances)
@@ -392,7 +392,8 @@ namespace Grand.Framework.Infrastructure.Extensions
                     new ExactUrlMatcher("/admin"),
                 };
             })
-            .AddHttpCompression(options => {
+            .AddHttpCompression(options =>
+            {
                 options.ExcludedPages = new List<IUrlMatcher> {
                     new WildcardUrlMatcher("/swagger/*"),
                 };
@@ -421,7 +422,7 @@ namespace Grand.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddMediator(this IServiceCollection services)
         {
-            var typeFinder = new WebAppTypeFinder();
+            var typeFinder = new AppTypeFinder();
             var assemblies = typeFinder.GetAssemblies();
             services.AddMediatR(assemblies.ToArray());
         }

@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Plugin.Widgets.Slider.Domain;
 using Grand.Plugin.Widgets.Slider.Models;
 
 namespace Grand.Plugin.Widgets.Slider.Infrastructure.Mapper
 {
-    public class SliderMapperConfiguration : Profile, IMapperProfile
+    public class SliderMapperConfiguration : Profile, IAutoMapperProfile
     {
         protected string SetObjectEntry(SlideModel model)
         {

@@ -1,4 +1,5 @@
-﻿using Grand.Domain.Localization;
+﻿using Grand.Core.Mapper;
+using Grand.Domain.Localization;
 using Grand.Web.Areas.Admin.Models.Localization;
 
 namespace Grand.Web.Areas.Admin.Extensions

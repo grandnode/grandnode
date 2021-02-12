@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Grand.Domain.Polls;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Polls;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class PollProfile : Profile, IMapperProfile
+    public class PollProfile : Profile, IAutoMapperProfile
     {
         public PollProfile()
         {

@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Grand.Domain.Orders;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Models.Settings;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class ShoppingCartSettingsProfile : Profile, IMapperProfile
+    public class ShoppingCartSettingsProfile : Profile, IAutoMapperProfile
     {
         public ShoppingCartSettingsProfile()
         {

@@ -1,6 +1,6 @@
 ﻿using Grand.Api.Constants;
+using Grand.Core;
 using Grand.Core.Configuration;
-using Grand.Core.Infrastructure;
 using Microsoft.AspNet.OData.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

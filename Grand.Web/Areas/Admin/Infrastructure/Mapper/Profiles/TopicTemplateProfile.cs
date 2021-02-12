@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Grand.Domain.Topics;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Models.Templates;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class TopicTemplateProfile : Profile, IMapperProfile
+    public class TopicTemplateProfile : Profile, IAutoMapperProfile
     {
         public TopicTemplateProfile()
         {

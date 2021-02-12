@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Grand.Domain.Documents;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Models.Documents;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class DocumentTypeProfile : Profile, IMapperProfile
+    public class DocumentTypeProfile : Profile, IAutoMapperProfile
     {
         public DocumentTypeProfile()
         {

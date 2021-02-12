@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Services.Payments;
 using Grand.Web.Areas.Admin.Models.Payments;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class IPaymentMethodProfile : Profile, IMapperProfile
+    public class IPaymentMethodProfile : Profile, IAutoMapperProfile
     {
         public IPaymentMethodProfile()
         {

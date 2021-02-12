@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Grand.Domain.Directory;
-using Grand.Core.Infrastructure.Mapper;
+using Grand.Core.Mapper;
 using Grand.Web.Areas.Admin.Extensions;
 using Grand.Web.Areas.Admin.Models.Directory;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Grand.Web.Areas.Admin.Infrastructure.Mapper.Profiles
 {
-    public class CurrencyProfile : Profile, IMapperProfile
+    public class CurrencyProfile : Profile, IAutoMapperProfile
     {
         public CurrencyProfile()
         {
