@@ -1101,7 +1101,7 @@ namespace Grand.Services.Admin
                         new AdminSiteMap {
                             SystemName = "Premium support services",
                             ResourceName = "Admin.Help.SupportServices",
-                            Url = "https://grandnode.com/support-service?utm_source=web&utm_medium=admin&utm_term=web&utm_campaign=Support",
+                            Url = "https://grandnode.com/premium-support-packages?utm_source=web&utm_medium=admin&utm_term=web&utm_campaign=Support",
                             IconClass = "fa fa-dot-circle-o",
                             OpenUrlInNewTab = true
                         }
