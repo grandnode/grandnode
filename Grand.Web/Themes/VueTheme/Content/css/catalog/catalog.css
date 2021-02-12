@@ -30,7 +30,7 @@
     font-weight: 400;
 }
 .generalLeftSide li.active.last > a {
-    color: #17a2b8;
+    color: #0E606C;
 }
 .generalLeftSide li a .total {
     position: relative;
@@ -40,7 +40,7 @@
     opacity: .5;
 }
 .generalLeftSide .block-category-navigation li.active .sublist > li.last > a {
-    color: #17a2b8;
+    color: #0E606C;
     font-weight: 500;
 }
 .generalLeftSide li {
@@ -111,7 +111,7 @@
 }
 .pagination .current-page.page-item .page-link {
     color: #fff;
-    background-color: #17a2b8;
+    background-color: #0E606C;
 }
 
 @media (max-width: 575px) {
