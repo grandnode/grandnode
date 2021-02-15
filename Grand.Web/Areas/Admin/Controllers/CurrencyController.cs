@@ -1,4 +1,5 @@
 ﻿using Grand.Core;
+using Grand.Core.Caching;
 using Grand.Domain.Directory;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
@@ -37,6 +38,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly ILanguageService _languageService;
         private readonly IStoreService _storeService;
+        private readonly ICacheBase _cacheBase;
 
         #endregion
 
@@ -47,7 +49,8 @@ namespace Grand.Web.Areas.Admin.Controllers
             CurrencySettings currencySettings, ISettingService settingService,
             IDateTimeHelper dateTimeHelper, ILocalizationService localizationService,
             ILanguageService languageService,
-            IStoreService storeService)
+            IStoreService storeService,
+            ICacheBase cacheBase)
         {
             _currencyService = currencyService;
             _currencyViewModelService = currencyViewModelService;
@@ -57,11 +60,17 @@ namespace Grand.Web.Areas.Admin.Controllers
             _localizationService = localizationService;
             _languageService = languageService;
             _storeService = storeService;
+            _cacheBase = cacheBase;
         }
-        
+
         #endregion
-        
+
         #region Methods
+
+        protected async Task ClearCache()
+        {
+            await _cacheBase.Clear();
+        }
 
         public IActionResult Index() => RedirectToAction("List");
 
@@ -149,6 +158,9 @@ namespace Grand.Web.Areas.Admin.Controllers
             _currencySettings.PrimaryExchangeRateCurrencyId = id;
             await _settingService.SaveSetting(_currencySettings);
 
+            //now clear cache
+            await ClearCache();
+
             return Json(new { result = true });
         }
 
@@ -158,6 +170,10 @@ namespace Grand.Web.Areas.Admin.Controllers
         {
             _currencySettings.PrimaryStoreCurrencyId = id;
             await _settingService.SaveSetting(_currencySettings);
+
+            //now clear cache
+            await ClearCache();
+
             return Json(new { result = true });
         }
 

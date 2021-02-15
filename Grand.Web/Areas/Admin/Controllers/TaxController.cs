@@ -1,4 +1,6 @@
-﻿using Grand.Domain.Tax;
+﻿using Grand.Core;
+using Grand.Core.Caching;
+using Grand.Domain.Tax;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Security.Authorization;
@@ -25,24 +27,31 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly TaxSettings _taxSettings;
         private readonly ISettingService _settingService;
         private readonly IServiceProvider _serviceProvider;
+        private readonly ICacheBase _cacheBase;
 	    #endregion
 
 		#region Constructors
 
         public TaxController(ITaxService taxService,
             ITaxCategoryService taxCategoryService, TaxSettings taxSettings,
-            ISettingService settingService, IServiceProvider serviceProvider)
+            ISettingService settingService, IServiceProvider serviceProvider,
+            ICacheBase cacheBase)
 		{
             _taxService = taxService;
             _taxCategoryService = taxCategoryService;
             _taxSettings = taxSettings;
             _settingService = settingService;
             _serviceProvider = serviceProvider;
+            _cacheBase = cacheBase;
         }
 
-		#endregion 
+        #endregion
 
         #region Tax Providers
+        protected async Task ClearCache()
+        {
+            await _cacheBase.Clear();
+        }
 
         public IActionResult Providers() => View();
 
@@ -80,6 +89,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _taxSettings.ActiveTaxProviderSystemName = systemName;
                 await _settingService.SaveSetting(_taxSettings);
             }
+
+            //now clear cache
+            await ClearCache();
 
             return RedirectToAction("Providers");
         }

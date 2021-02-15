@@ -1,4 +1,5 @@
 ﻿using Grand.Core;
+using Grand.Core.Caching;
 using Grand.Domain.Messages;
 using Grand.Framework.Controllers;
 using Grand.Framework.Kendoui;
@@ -26,18 +27,24 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ILocalizationService _localizationService;
         private readonly ISettingService _settingService;
         private readonly EmailAccountSettings _emailAccountSettings;
+        private readonly ICacheBase _cacheBase;
 
         public EmailAccountController(IEmailAccountViewModelService emailAccountViewModelService, IEmailAccountService emailAccountService,
             ILocalizationService localizationService, ISettingService settingService,
-            EmailAccountSettings emailAccountSettings)
+            EmailAccountSettings emailAccountSettings, ICacheBase cacheBase)
         {
             _emailAccountViewModelService = emailAccountViewModelService;
             _emailAccountService = emailAccountService;
             _localizationService = localizationService;
             _emailAccountSettings = emailAccountSettings;
             _settingService = settingService;
+            _cacheBase = cacheBase;
         }
 
+        protected async Task ClearCache()
+        {
+            await _cacheBase.Clear();
+        }
         public IActionResult List() => View();
 
         [HttpPost]
@@ -67,6 +74,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _emailAccountSettings.DefaultEmailAccountId = defaultEmailAccount.Id;
                 await _settingService.SaveSetting(_emailAccountSettings);
             }
+
+            //now clear cache
+            await ClearCache();
+
             return RedirectToAction("List");
         }
         [PermissionAuthorizeAction(PermissionActionName.Create)]

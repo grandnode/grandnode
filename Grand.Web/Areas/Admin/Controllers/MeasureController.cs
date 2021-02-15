@@ -1,4 +1,6 @@
-﻿using Grand.Domain.Directory;
+﻿using Grand.Core;
+using Grand.Core.Caching;
+using Grand.Domain.Directory;
 using Grand.Framework.Kendoui;
 using Grand.Framework.Mvc;
 using Grand.Framework.Security.Authorization;
@@ -24,6 +26,7 @@ namespace Grand.Web.Areas.Admin.Controllers
         private readonly ISettingService _settingService;
         private readonly ILocalizationService _localizationService;
         private readonly MeasureSettings _measureSettings;
+        private readonly ICacheBase _cacheBase;
 
         #endregion
 
@@ -32,17 +35,23 @@ namespace Grand.Web.Areas.Admin.Controllers
         public MeasureController(IMeasureService measureService,
             ISettingService settingService,
             ILocalizationService localizationService,
-            MeasureSettings measureSettings)
+            MeasureSettings measureSettings,
+            ICacheBase cacheBase)
         {
             _measureService = measureService;
             _settingService = settingService;
             _localizationService = localizationService;
             _measureSettings = measureSettings;
+            _cacheBase = cacheBase;
         }
 
         #endregion
 
         #region Methods
+        protected async Task ClearCache()
+        {
+            await _cacheBase.Clear();
+        }
 
         #region Weights
 
@@ -127,6 +136,9 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _measureSettings.BaseWeightId = primaryWeight.Id;
                 await _settingService.SaveSetting(_measureSettings);
             }
+
+            //now clear cache
+            await ClearCache();
 
             return Json(new { result = true });
         }
@@ -216,6 +228,10 @@ namespace Grand.Web.Areas.Admin.Controllers
                 _measureSettings.BaseDimensionId = id;
                 await _settingService.SaveSetting(_measureSettings);
             }
+            
+            //now clear cache
+            await ClearCache();
+            
             return Json(new { result = true });
         }
         #endregion
