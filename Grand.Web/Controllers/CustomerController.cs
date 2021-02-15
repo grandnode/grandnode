@@ -83,6 +83,7 @@ namespace Grand.Web.Controllers
 
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
+        [CheckAccessClosedStore(true)]
         public virtual IActionResult Login(bool? checkoutAsGuest)
         {
             var model = new LoginModel();
@@ -95,6 +96,7 @@ namespace Grand.Web.Controllers
         [HttpPost]
         //available even when navigation is not allowed
         [CheckAccessPublicStore(true)]
+        [CheckAccessClosedStore(true)]
         [ValidateCaptcha]
         [AutoValidateAntiforgeryToken]
         public virtual async Task<IActionResult> Login(LoginModel model, string returnUrl, bool captchaValid,
