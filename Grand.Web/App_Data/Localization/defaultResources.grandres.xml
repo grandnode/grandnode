@@ -6046,6 +6046,9 @@
     <Value>Number of maximum search results to show in result box. Shouldn't be greater than 100.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.AdminSearch.Fields.MenuDisplayOrder">
+    <Value>Menu items display order</Value>
+  </LocaleResource>
+  <LocaleResource Name="Admin.Configuration.Settings.AdminSearch.Fields.MenuDisplayOrder.Hint">
     <Value>Display order of results for this search, e.g. if you want found categories to be shown before products, set 0 for categories and 1 for products.</Value>
   </LocaleResource>
   <LocaleResource Name="Admin.Configuration.Settings.AdminSearch.Fields.MinSearchTermLength">
