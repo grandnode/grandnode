@@ -618,7 +618,7 @@ namespace Grand.Services.Orders
                 if (a2.AttributeControlType == AttributeControlType.ReadonlyCheckboxes)
                 {
                     //customers cannot edit read-only attributes
-                    var allowedReadOnlyValueIds = a2.ProductAttributeValues.Where(x => x.Id == a2.Id)
+                    var allowedReadOnlyValueIds = a2.ProductAttributeValues.Where(x => x.ProductAttributeMappingId == a2.Id)
                         .Where(x => x.IsPreSelected)
                         .Select(x => x.Id)
                         .ToArray();
