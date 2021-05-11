@@ -4,7 +4,9 @@ status](https://ci.appveyor.com/api/projects/status/ox0qebg3wv3dp30e/branch/deve
 ![Github All Releases](https://img.shields.io/github/downloads/grandnode/grandnode/total.svg) [![Demo](https://img.shields.io/badge/DEMO-HERE-green.svg)](https://demo.grandnode.com/)
 
 <br />
-Dear Community, 5 years ago, GrandNode was created on the basis of nopCommerce. We are therefore obligated to inherit their license. This license does not allow us to use 100% of the benefits offered by open-source, it inhibits the development of our application. We are working on a completely new platform that will allow you to use 100% of the potential of .NET Core 5.0 and MongoDB. In the next few days we will share an adress of new repository, where the develop version of the incoming project will be published. Stay tuned! Please note that bug fixing for the current version of GrandNode, will be supported until the end of 2022.
+Dear Community, 5 years ago, GrandNode was created on the basis of nopCommerce. We are therefore obligated to inherit their license. This license does not allow us to use 100% of the benefits offered by open-source, it inhibits the development of our application. We are working on a completely new platform that will allow you to use 100% of the potential of .NET Core 5.0 and MongoDB. Please note that bug fixing for the current version of GrandNode, will be supported until the end of 2022.
+
+We want to inform you that the 'develop' version of our new platform GrandNode v2 has been published. Devs, you can check it by cloning the following repository: [https://github.com/grandnode/grandnode2](https://github.com/grandnode/grandnode2)
 <br /><br />
 <p align="center">
   <a href="https://grandnode.com/">
