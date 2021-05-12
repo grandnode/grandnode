@@ -141,17 +141,17 @@ namespace Grand.Web.Areas.Admin.Controllers
 
 
                 //enabled/disabled (only for some plugin types)
-                if (pluginInstance is IPaymentMethod)
+                if (pluginInstance is IPaymentMethod iPaymentMethod)
                 {
                     //payment plugin
                     pluginModel.CanChangeEnabled = true;
-                    pluginModel.IsEnabled = ((IPaymentMethod)pluginInstance).IsPaymentMethodActive(_paymentSettings);
+                    pluginModel.IsEnabled = iPaymentMethod.IsPaymentMethodActive(_paymentSettings);
                 }
-                else if (pluginInstance is IShippingRateComputationMethod)
+                else if (pluginInstance is IShippingRateComputationMethod iShippingRateComputationMethod)
                 {
                     //shipping rate computation method
                     pluginModel.CanChangeEnabled = true;
-                    pluginModel.IsEnabled = ((IShippingRateComputationMethod)pluginInstance).IsShippingRateComputationMethodActive(_shippingSettings);
+                    pluginModel.IsEnabled = iShippingRateComputationMethod.IsShippingRateComputationMethodActive(_shippingSettings);
                 }
                 else if (pluginInstance is ITaxProvider)
                 {
@@ -159,17 +159,17 @@ namespace Grand.Web.Areas.Admin.Controllers
                     pluginModel.CanChangeEnabled = true;
                     pluginModel.IsEnabled = pluginDescriptor.SystemName.Equals(_taxSettings.ActiveTaxProviderSystemName, StringComparison.OrdinalIgnoreCase);
                 }
-                else if (pluginInstance is IExternalAuthenticationMethod)
+                else if (pluginInstance is IExternalAuthenticationMethod iExternalAuthenticationMethod)
                 {
                     //external auth method
                     pluginModel.CanChangeEnabled = true;
-                    pluginModel.IsEnabled = ((IExternalAuthenticationMethod)pluginInstance).IsMethodActive(_externalAuthenticationSettings);
+                    pluginModel.IsEnabled = iExternalAuthenticationMethod.IsMethodActive(_externalAuthenticationSettings);
                 }
-                else if (pluginInstance is IWidgetPlugin)
+                else if (pluginInstance is IWidgetPlugin iWidgetPlugin)
                 {
                     //Misc plugins
                     pluginModel.CanChangeEnabled = true;
-                    pluginModel.IsEnabled = ((IWidgetPlugin)pluginInstance).IsWidgetActive(_widgetSettings);
+                    pluginModel.IsEnabled = iWidgetPlugin.IsWidgetActive(_widgetSettings);
                 }
 
             }
