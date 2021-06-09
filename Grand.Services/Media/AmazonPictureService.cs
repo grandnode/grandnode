@@ -62,13 +62,24 @@ namespace Grand.Services.Media
             if (string.IsNullOrEmpty(_config.AmazonBucketName))
                 throw new ArgumentNullException("AmazonBucketName");
 
-            //Region guard
-            var regionEndpoint = RegionEndpoint.GetBySystemName(_config.AmazonRegion);
-            if (regionEndpoint.DisplayName == "Unknown")
-                throw new NullReferenceException("specified Region is invalid");
+            AmazonS3Config amazonS3Config = new AmazonS3Config();
+
+            if (string.IsNullOrEmpty(_config.AmazonRegionEndpoint))
+            {
+                //Region guard
+                var regionEndpoint = RegionEndpoint.GetBySystemName(_config.AmazonRegion);
+                if (regionEndpoint.DisplayName == "Unknown")
+                    throw new NullReferenceException("specified Region is invalid");
+
+                amazonS3Config.RegionEndpoint = regionEndpoint;
+            }
+            else
+            {
+                amazonS3Config.ServiceURL = _config.AmazonRegionEndpoint;
+            }
 
             //Client guard
-            _s3Client = new AmazonS3Client(_config.AmazonAwsAccessKeyId, _config.AmazonAwsSecretAccessKey, regionEndpoint);
+            _s3Client = new AmazonS3Client(_config.AmazonAwsAccessKeyId, _config.AmazonAwsSecretAccessKey, amazonS3Config);
 
             //Bucket guard
             _bucketName = _config.AmazonBucketName;
