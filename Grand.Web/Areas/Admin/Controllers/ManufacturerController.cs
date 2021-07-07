@@ -343,8 +343,8 @@ namespace Grand.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> ImportFromXlsx(IFormFile importexcelfile, [FromServices] IWorkContext workContext)
         {
-            //a vendor and staff cannot import manufacturers
-            if (workContext.CurrentVendor != null || _workContext.CurrentCustomer.IsStaff())
+            //a vendor cannot import manufacturers
+            if (workContext.CurrentVendor != null || _workContext.CurrentCustomer.IsVendor())
                 return AccessDeniedView();
 
             try
