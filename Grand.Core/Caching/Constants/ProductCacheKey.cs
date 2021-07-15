@@ -20,8 +20,9 @@
         /// </summary>
         /// <remarks>
         /// {0} : customer ID
+        /// {1} : store ID
         /// </remarks>
-        public static string PRODUCTS_CUSTOMER_ROLE => "Grand.product.cr-{0}";
+        public static string PRODUCTS_CUSTOMER_ROLE => "Grand.product.cr-{0}-{1}";
 
         /// <summary>
         /// Key for caching

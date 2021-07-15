@@ -34,7 +34,7 @@ namespace Grand.Services.Queries.Handlers.Catalog
 
         public async Task<IList<Product>> Handle(GetRecommendedProductsQuery request, CancellationToken cancellationToken)
         {
-            return await _cacheBase.GetAsync(string.Format(CacheKey.PRODUCTS_CUSTOMER_ROLE, string.Join(",", request.CustomerRoleIds)), async () =>
+            return await _cacheBase.GetAsync(string.Format(CacheKey.PRODUCTS_CUSTOMER_ROLE, string.Join(",", request.CustomerRoleIds), request.StoreId), async () =>
             {
                 var query = from cr in _customerRoleProductRepository.Table
                             where request.CustomerRoleIds.Contains(cr.CustomerRoleId)
