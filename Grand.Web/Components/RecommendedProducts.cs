@@ -17,6 +17,7 @@ namespace Grand.Web.Components
         #region Fields
 
         private readonly IWorkContext _workContext;
+        private readonly IStoreContext _storeContext;
         private readonly IMediator _mediator;
         private readonly CatalogSettings _catalogSettings;
 
@@ -26,10 +27,12 @@ namespace Grand.Web.Components
 
         public RecommendedProductsViewComponent(
             IWorkContext workContext,
+            IStoreContext storeContext,
             IMediator mediator,
             CatalogSettings catalogSettings)
         {
             _workContext = workContext;
+            _storeContext = storeContext;
             _mediator = mediator;
             _catalogSettings = catalogSettings;
         }
@@ -43,7 +46,7 @@ namespace Grand.Web.Components
             if (!_catalogSettings.RecommendedProductsEnabled)
                 return Content("");
 
-            var products = await _mediator.Send(new GetRecommendedProductsQuery() { CustomerRoleIds = _workContext.CurrentCustomer.GetCustomerRoleIds() });
+            var products = await _mediator.Send(new GetRecommendedProductsQuery() { CustomerRoleIds = _workContext.CurrentCustomer.GetCustomerRoleIds(), StoreId = _storeContext.CurrentStore.Id });
 
             if (!products.Any())
                 return Content("");
