@@ -1115,9 +1115,16 @@ namespace Grand.Services.Installation
             #region Upgrade orders
 
             var orderRepository = _serviceProvider.GetRequiredService<IRepository<Order>>();
-            var query = orderRepository.Table.Where(x => x.CurrencyRate != 1 && (x.Rate != 1 || x.Rate != 0)).ToList();
+
+            //update store owner
+            await orderRepository.Table.ForEachAsync(async (o) =>
+            {
+                o.OwnerId = o.CustomerId;
+                await orderRepository.UpdateAsync(o);
+            });
 
             //upgrade Currency value
+            var query = orderRepository.Table.Where(x => x.CurrencyRate != 1 && (x.Rate != 1 || x.Rate != 0)).ToList();
             foreach (var order in query)
             {
                 var rate = order.CurrencyRate;
