@@ -87,6 +87,11 @@ namespace Grand.Core.Configuration
         public string AmazonBucketName { get; set; }
 
         /// <summary>
+        /// Custom Endpoint for third party S3 compatible service, example: https://sfo2.digitaloceanspaces.com
+        /// </summary>
+        public string AmazonRegionEndpoint { get; set; }
+
+        /// <summary>
         /// Amazon Domain name for cloudfront distribution
         /// </summary>
         public string AmazonDistributionDomainName { get; set; }
